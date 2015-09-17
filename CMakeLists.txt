@@ -1,0 +1,6 @@
+if(CMAKE_BUILD_TYPE STREQUAL Release)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qdb-api-control/control.in" "${CMAKE_CURRENT_SOURCE_DIR}/qdb-api-control/control" @ONLY NEWLINE_STYLE UNIX)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qdb-utils-control/control.in" "${CMAKE_CURRENT_SOURCE_DIR}/qdb-utils-control/control" @ONLY NEWLINE_STYLE UNIX)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/qdb-server-control/control.in" "${CMAKE_CURRENT_SOURCE_DIR}/qdb-server-control/control" @ONLY NEWLINE_STYLE UNIX)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/run_deb_packages.py.in" "${CMAKE_CURRENT_SOURCE_DIR}/run_deb_packages.py" @ONLY NEWLINE_STYLE UNIX)
+endif()

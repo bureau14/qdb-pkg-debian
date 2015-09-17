@@ -1,0 +1,11 @@
+Package: qdb-api
+Version: @CPACK_PACKAGE_VERSION@-1
+Section: database
+Priority: optional
+Architecture: amd64
+Maintainer: quasardb SAS <contact@quasardb.net>
+Homepage: https://www.quasardb.net/
+Dependencies: libc6 (>= 2.12)
+Description: quasardb C/C++ API
+ @CPACK_PACKAGE_DESCRIPTION_SUMMARY@
+

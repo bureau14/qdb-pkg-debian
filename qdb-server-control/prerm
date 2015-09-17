@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+initctl --quiet stop qdbd || :
+initctl --quiet stop qdb_httpd || :

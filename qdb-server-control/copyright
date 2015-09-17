@@ -1,0 +1,10 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: qdb
+Source: https://www.quasardb.net/
+
+Files: *
+Copyright: Copyright 2009-2015 quasardb SAS. All rights reserved.
+License: Proprietary
+
+License: Proprietary
+ 
