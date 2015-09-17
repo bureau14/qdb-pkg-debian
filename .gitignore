@@ -1,3 +1,7 @@
-*.pyc
 *.deb
-make_deb_packages.py
+*.tar.bz2
+*.tar.gz
+*/control/md5sums
+*/control/control
+*/data/
+*/debian-binary

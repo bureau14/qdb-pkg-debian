@@ -1,11 +1,10 @@
 Package: qdb-server
-Version: @CPACK_PACKAGE_VERSION@-1
+Version: $QDB_VERSION-1
 Section: database
 Priority: optional
 Architecture: amd64
 Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
-Dependencies: adduser libc6 (>= 2.12)
+Depends: libc6 (>= 2.12)
 Description: quasardb servers
- @CPACK_PACKAGE_DESCRIPTION_SUMMARY@
-
+ quasardb is an advanced, distributed, high-performance key-value store
