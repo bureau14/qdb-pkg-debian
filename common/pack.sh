@@ -10,6 +10,7 @@ COPYRIGHT="$(dirname $(realpath $0))/copyright"
 rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 
 (
+	chmod -R g=o data/
 	cd 'data'
 	
 	mkdir -p "usr/share/doc/$PACKAGE_NAME"
@@ -22,7 +23,9 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 )
 
 (
+	chmod -R g=o control/
 	cd 'control'
+
 	find -type f -name '*.in' -exec \
 		sh -c "export QDB_VERSION=$QDB_VERSION; envsubst < \$0 '\$QDB_VERSION' > \${0%.in}" {} \;
 	find * -type f -not -name '*.in' | xargs \
