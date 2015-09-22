@@ -4,7 +4,7 @@ set -eu
 
 PATH="$PATH:$(dirname $0)/../common"
 
-TARBALL=$(realpath $1)
+TARBALL=$(readlink -e $1)
 VERSION=$(get_version.sh $1)
 
 cd $(dirname $0)
