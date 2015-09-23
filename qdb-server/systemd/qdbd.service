@@ -1,0 +1,14 @@
+[Unit]
+Description=quasardb daemon
+After=network.target
+ConditionPathExists=/etc/qdb/qdbd.conf
+
+[Service]
+Type=forking
+User=qdb
+Group=qdb
+ExecStart=/usr/sbin/qdbd -c /etc/qdb/qdbd.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -15,9 +15,17 @@ chown $USER:$GROUP /var/lib/qdb/db
 chown $USER:$GROUP /var/log/qdb
 chown $USER:$GROUP /var/run/qdb
 
-/usr/bin/qdb_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db /usr/share/qdb/console
+qdb_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db /usr/share/qdb/console
 
-chown root:root /etc/init/qdbd.conf
-chown root:root /etc/init/qdb_httpd.conf
+chown root:root /usr/share/qdb/upstart/qdbd.conf
+chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
-initctl reload-configuration
+if ps -p1 | grep -q systemd; then
+    ln -sf /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
+    ln -sf /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    systemctl daemon-reload
+else
+    ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
+    ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
+    initctl reload-configuration
+fi

@@ -20,12 +20,12 @@ cd $(dirname $0)
 	mv 'bin/html' 'usr/share/qdb/console'
 
 	mkdir -p 'usr/sbin'
-	mv "bin/qdbd" 'usr/sbin/'
-	mv "bin/qdb_httpd" 'usr/sbin/'
+	mv 'bin/qdbd' 'usr/sbin/'
+	mv 'bin/qdb_httpd' 'usr/sbin/'
 
-	mkdir -p 'etc/init'
-	cp "../init/qdbd.conf" 'etc/init/'
-	cp "../init/qdb_httpd.conf" 'etc/init/'
+	mkdir -p 'usr/share/qdb/'
+	cp -r '../upstart/' 'usr/share/qdb/'
+	cp -r '../systemd/' 'usr/share/qdb/'
 
 	mv 'bin' 'usr/'	
 )

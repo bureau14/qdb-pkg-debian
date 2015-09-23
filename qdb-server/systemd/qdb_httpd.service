@@ -1,0 +1,14 @@
+[Unit]
+Description=quasardb http bridge
+After=network.target
+ConditionPathExists=/etc/qdb/qdb_httpd.conf
+
+[Service]
+Type=forking
+User=qdb
+Group=qdb
+ExecStart=/usr/sbin/qdb_httpd -c /etc/qdb/qdb_httpd.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

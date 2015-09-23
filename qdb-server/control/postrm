@@ -2,15 +2,22 @@
 
 set -e
 
-if [ "$1" = "purge" ]
-then
- rm -rf /var/lib/qdb
- rm -rf /etc/qdb
- rm -rf /var/run/qdb
- userdel qdb
+if [ "$1" = "purge" ]; then
+    rm -rf /var/lib/qdb
+    rm -rf /etc/qdb
+    rm -rf /var/run/qdb
+    userdel qdb
 fi
 
-rm -f /etc/init/qdbd.conf
-rm -f /etc/init/qdb_httpd.conf
+if [ "$1" != "upgrade" ]; then
+    rm -f /etc/systemd/system/qdbd.service
+    rm -f /etc/systemd/system/qdb_httpd.service
+    rm -f /etc/init/qdbd.conf
+    rm -f /etc/init/qdb_httpd.conf
 
-initctl reload-configuration
+    if ps -p1 | grep -q systemd; then
+        systemctl daemon-reload
+    else
+        initctl reload-configuration
+    fi
+fi
