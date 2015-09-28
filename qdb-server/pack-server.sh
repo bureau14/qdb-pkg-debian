@@ -10,24 +10,27 @@ VERSION=$(get_version.sh $1)
 cd $(dirname $0)
 
 (
-	rm -rf 'data'
-	mkdir 'data'
-	cd 'data'
+	rm -rf data
+	mkdir data
+	cd data
 
 	tar -xf "$TARBALL"
 
-	mkdir -p 'usr/share/qdb/console'
-	mv 'bin/html' 'usr/share/qdb/console'
+	mkdir -p etc/sysctl.d/
+	cp ../sysctl.d/* etc/sysctl.d/
 
-	mkdir -p 'usr/sbin'
-	mv 'bin/qdbd' 'usr/sbin/'
-	mv 'bin/qdb_httpd' 'usr/sbin/'
+	mkdir -p usr/share/qdb/console
+	mv bin/html usr/share/qdb/console
 
-	mkdir -p 'usr/share/qdb/'
-	cp -r '../upstart/' 'usr/share/qdb/'
-	cp -r '../systemd/' 'usr/share/qdb/'
+	mkdir -p usr/sbin
+	mv bin/qdbd usr/sbin/
+	mv bin/qdb_httpd usr/sbin/
 
-	mv 'bin' 'usr/'	
+	mkdir -p usr/share/qdb/
+	cp -r ../upstart/ usr/share/qdb/
+	cp -r ../systemd/ usr/share/qdb/
+
+	mv bin usr/	
 )
 
-'pack.sh' $VERSION
+pack.sh $VERSION
