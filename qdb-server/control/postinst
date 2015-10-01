@@ -17,7 +17,7 @@ chown $USER:$GROUP /var/run/qdb
 
 qdb_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db /usr/share/qdb/console
 
-sysctl -q -p /etc/sysctl.d/30-quasardb.conf
+sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
