@@ -19,7 +19,7 @@ cd $(dirname $0)
 	mkdir -p etc/sysctl.d/
 	cp ../sysctl.d/* etc/sysctl.d/
 
-	mkdir -p usr/share/qdb/console
+	mkdir -p usr/share/qdb
 	mv bin/html usr/share/qdb/console
 
 	mkdir -p usr/sbin
