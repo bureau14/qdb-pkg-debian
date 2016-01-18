@@ -1,12 +1,12 @@
 [Unit]
-Description=quasardb http bridge
+Description=quasardb web bridge
 After=network.target
 ConditionPathExists=/etc/qdb/qdb_httpd.conf
 
 [Service]
 Type=forking
-User=qdb
-Group=qdb
+User=qdb_http
+Group=qdb_http
 ExecStart=/usr/sbin/qdb_httpd -c /etc/qdb/qdb_httpd.conf
 Restart=on-failure
 

@@ -1,4 +1,4 @@
-Package: qdb-server
+Package: qdb-web-bridge
 Version: $QDB_VERSION-1
 Section: database
 Priority: optional
@@ -7,5 +7,5 @@ Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
 Pre-Depends: adduser
 Depends: libc6 (>= 2.12)
-Description: quasardb, server
+Description: quasardb, web bridge
  quasardb is an advanced, distributed, high-performance key-value store

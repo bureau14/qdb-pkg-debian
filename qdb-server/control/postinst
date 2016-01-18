@@ -5,29 +5,26 @@ set -eu
 USER="qdb"
 GROUP="$USER"
 
-mkdir -p /etc/qdb
-
+# Database
 mkdir -p /var/lib/qdb/db
-mkdir -p /var/log/qdb
-mkdir -p /var/run/qdb
-
 chown $USER:$GROUP /var/lib/qdb/db
-chown $USER:$GROUP /var/log/qdb
-chown $USER:$GROUP /var/run/qdb
 
-qdb_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db /usr/share/qdb/console
+# Log
+mkdir -p /var/log/qdb
+chown $USER:$GROUP /var/log/qdbd
+
+# Config
+mkdir -p /etc/qdb
+qdbd_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
-chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
 if ps -p1 | grep -q systemd; then
     ln -sf /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
-    ln -sf /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
     systemctl daemon-reload
 else
     ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
-    ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
     initctl reload-configuration
 fi

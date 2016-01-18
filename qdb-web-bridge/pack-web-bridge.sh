@@ -16,15 +16,13 @@ cd $(dirname $0)
 
 	tar -xf "$TARBALL"
 
-	mkdir -p etc/sysctl.d/
-	cp ../sysctl.d/* etc/sysctl.d/
-
 	mkdir -p usr/sbin
-	mv bin/qdbd usr/sbin/
+	mv bin/qdb_httpd usr/sbin/
 
-	mkdir -p usr/share/qdb/
+	mkdir -p usr/share/qdb
 	cp -r ../upstart/ usr/share/qdb/
 	cp -r ../systemd/ usr/share/qdb/
+	mv bin/html usr/share/qdb/www
 
 	mv bin usr/	
 )

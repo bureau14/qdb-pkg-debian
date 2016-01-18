@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eu
+
+USER="qdb_http"
+GROUP="$USER"
+
+mkdir /var/log/qdb_http
+chown $USER:$GROUP /var/log/qdb_http
+
+mkdir -p /etc/qdb
+qdb_httpd_generate_config /etc/qdb/ /var/log/qdb_http /usr/share/qdb/www
+
+chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
+
+if ps -p1 | grep -q systemd; then
+    ln -sf /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    systemctl daemon-reload
+else
+    ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
+    initctl reload-configuration
+fi
