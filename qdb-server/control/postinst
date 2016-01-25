@@ -4,18 +4,22 @@ set -eu
 
 USER="qdb"
 GROUP="$USER"
+ETC_PATH=/etc/qdb
+DB_PATH=/var/db/qdb
+LOG_PATH=/var/log/qdb
 
 # Database
-mkdir -p /var/lib/qdb/db
-chown $USER:$GROUP /var/lib/qdb/db
+mkdir -p $DB_PATH
+chown $USER:$GROUP $DB_PATH
 
 # Log
-mkdir -p /var/log/qdb
-chown $USER:$GROUP /var/log/qdbd
+mkdir -p $LOG_PATH
+touch $LOG_PATH/qdbd.log
+chown -R $USER:$GROUP $LOG_PATH
 
 # Config
-mkdir -p /etc/qdb
-qdbd_generate_config /etc/qdb/ /var/log/qdb /var/lib/qdb/db
+mkdir -p $ETC_PATH
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config=$ETC_PATH/qdbd.conf --daemonize --log-file=$LOG_PATH/qdbd.log --log-dump=$LOG_PATH/qdbd_error_dump.txt --root=$DB_PATH
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf
 

@@ -4,12 +4,17 @@ set -eu
 
 USER="qdb_http"
 GROUP="$USER"
+ETC_PATH=/etc/qdb
+LOG_PATH=/var/log/qdb_http
+WWW_PATH=/usr/share/qdb/www
 
-mkdir /var/log/qdb_http
-chown $USER:$GROUP /var/log/qdb_http
+# Log
+mkdir $LOG_PATH
+chown $USER:$GROUP $LOG_PATH
 
+# Config
 mkdir -p /etc/qdb
-qdb_httpd_generate_config /etc/qdb/ /var/log/qdb_http /usr/share/qdb/www
+[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-conf=$ETC_PATH/qdb_httpd.conf --daemonize --log-file=$LOG_PATH/qdb_httpd.log --log-dump=$LOG_PATH/qdb_httpd_error_dump.txt --root=$WWW_PATH
 
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
