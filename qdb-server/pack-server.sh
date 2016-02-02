@@ -14,19 +14,15 @@ cd $(dirname $0)
 	mkdir data
 	cd data
 
-	tar -xf "$TARBALL"
-
 	mkdir -p etc/sysctl.d/
 	cp ../sysctl.d/* etc/sysctl.d/
 
-	mkdir -p usr/sbin
-	mv bin/qdbd usr/sbin/
+	mkdir usr
+	tar -xf "$TARBALL" -C usr
 
 	mkdir -p usr/share/qdb/
 	cp -r ../upstart/ usr/share/qdb/
 	cp -r ../systemd/ usr/share/qdb/
-
-	mv bin usr/	
 )
 
 pack.sh $VERSION

@@ -7,7 +7,7 @@ ConditionPathExists=/etc/qdb/qdb_httpd.conf
 Type=forking
 User=qdb_http
 Group=qdb_http
-ExecStart=/usr/sbin/qdb_httpd -c /etc/qdb/qdb_httpd.conf
+ExecStart=/usr/bin/qdb_httpd -c /etc/qdb/qdb_httpd.conf
 Restart=on-failure
 
 [Install]

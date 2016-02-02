@@ -14,17 +14,10 @@ cd $(dirname $0)
 	mkdir data
 	cd data
 
-	tar -xf "$TARBALL"
-
-	mkdir -p usr/sbin
-	mv bin/qdb_httpd usr/sbin/
-
-	mkdir -p usr/share/qdb
+	mkdir usr
+	tar -xf "$TARBALL" -C usr
 	cp -r ../upstart/ usr/share/qdb/
 	cp -r ../systemd/ usr/share/qdb/
-	mv bin/html usr/share/qdb/www
-
-	mv bin usr/	
 )
 
 pack.sh $VERSION
