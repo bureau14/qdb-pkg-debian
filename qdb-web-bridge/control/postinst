@@ -14,7 +14,7 @@ chown $USER:$GROUP $LOG_PATH
 
 # Config
 mkdir -p /etc/qdb
-[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-conf=$ETC_PATH/qdb_httpd.conf --daemonize --log-file=$LOG_PATH/qdb_httpd.log --log-dump=$LOG_PATH/qdb_httpd_error_dump.txt --root=$WWW_PATH
+[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config=$ETC_PATH/qdb_httpd.conf --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH
 
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
