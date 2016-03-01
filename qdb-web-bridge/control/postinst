@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -eu
-
 USER="qdb_http"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
@@ -9,19 +7,23 @@ LOG_PATH=/var/log/qdb_http
 WWW_PATH=/usr/share/qdb/www
 
 # Log
-mkdir $LOG_PATH
+mkdir -p $LOG_PATH
 chown $USER:$GROUP $LOG_PATH
 
 # Config
 mkdir -p /etc/qdb
-[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config=$ETC_PATH/qdb_httpd.conf --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH
+[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH > $ETC_PATH/qdb_httpd.conf
 
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
 if ps -p1 | grep -q systemd; then
-    ln -sf /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    # caution: systemd doesn't follow symlink
+    cp /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
     systemctl daemon-reload
+    systemctl -q enable qdb_httpd.service
+    systemctl start qdb_httpd.service
 else
     ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
     initctl reload-configuration
+    initctl start qdb_httpd
 fi

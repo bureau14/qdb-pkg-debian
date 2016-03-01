@@ -32,4 +32,4 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 
 echo '2.0' > 'debian-binary'
 
-ar -rDv "$DEB_FILENAME" 'debian-binary' 'control.tar.gz' 'data.tar.bz2'
+ar -rDv "$DEB_FILENAME" 'debian-binary' 'control.tar.gz' 'data.tar.bz2' 2>&1

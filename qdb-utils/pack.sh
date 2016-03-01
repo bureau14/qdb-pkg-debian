@@ -2,12 +2,11 @@
 
 set -eu
 
-PATH="$PATH:$(dirname $0)/../common"
-
 TARBALL=$(readlink -e $1)
-VERSION=$(get_version.sh $1)
 
 cd $(dirname $0)
+
+VERSION=$(../common/get_version.sh $TARBALL)
 
 (
 	rm -rf 'data'
@@ -17,4 +16,4 @@ cd $(dirname $0)
 	tar -xf "$TARBALL"
 )
 
-'pack.sh' $VERSION
+../common/pack.sh $VERSION

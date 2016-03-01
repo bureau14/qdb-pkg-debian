@@ -2,12 +2,11 @@
 
 set -eu
 
-PATH="$PATH:$(dirname $0)/../common"
-
 TARBALL=$(readlink -e $1)
-VERSION=$(get_version.sh $1)
 
 cd $(dirname $0)
+
+VERSION=$(../common/get_version.sh $TARBALL)
 
 (
 	rm -rf data
@@ -17,9 +16,9 @@ cd $(dirname $0)
 	tar -xf "$TARBALL"
 
     # Note: .so files are not executable on Debian
-    chmod 644 lib/libqdb_api.so 
+    chmod 644 lib/libqdb_api.so
 
-    mv lib/libqdb_api.so lib/libqdb_api-$VERSION.so   
+    mv lib/libqdb_api.so lib/libqdb_api-$VERSION.so
 
     mv include/qdb include/qdb-$VERSION
 
@@ -27,4 +26,4 @@ cd $(dirname $0)
 	mv example/ share/qdb/
 )
 
-pack.sh $VERSION
+../common/pack.sh $VERSION

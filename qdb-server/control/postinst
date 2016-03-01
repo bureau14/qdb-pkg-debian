@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -eu
-
 USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
@@ -19,16 +17,20 @@ chown -R $USER:$GROUP $LOG_PATH
 
 # Config
 mkdir -p $ETC_PATH
-[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config=$ETC_PATH/qdbd.conf --daemonize --log-directory=$LOG_PATH --root=$DB_PATH
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH > $ETC_PATH/qdbd.conf
 
-sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf
+sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
 
 if ps -p1 | grep -q systemd; then
-    ln -sf /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
+    # caution: systemd doesn't follow symlink
+    cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
     systemctl daemon-reload
+    systemctl -q enable qdbd.service
+    systemctl start qdbd.service
 else
     ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
     initctl reload-configuration
+    initctl start qdbd
 fi
