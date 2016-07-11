@@ -117,13 +117,12 @@ build_package qdb-utils *-utils.tar.gz
 build_package qdb-web-bridge *-web-bridge.tar.gz
 
 set +e
-#run_test_on_container debian squeeze
-#run_test_on_container debian wheezy
 run_test_on_container debian jessie 30
 run_test_on_container debian sid 5
+run_test_on_container debian stretch 5
 
 run_test_on_container ubuntu precise 5
 run_test_on_container ubuntu trusty 5
-run_test_on_container ubuntu vivid 5
 run_test_on_container ubuntu wily 5
 run_test_on_container ubuntu xenial 5
+run_test_on_container ubuntu yakkety 5
