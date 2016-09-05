@@ -23,7 +23,7 @@ VERSION=$(../common/get_version.sh $TARBALL)
     mv include/qdb include/qdb-$VERSION
 
 	mkdir -p share/qdb/
-	mv example/ share/qdb/
+	mv examples/ share/qdb/
 )
 
 ../common/pack.sh $VERSION
