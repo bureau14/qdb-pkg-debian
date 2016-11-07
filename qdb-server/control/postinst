@@ -3,7 +3,7 @@
 USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
-DB_PATH=/var/db/qdb
+DB_PATH=/var/lib/qdb
 LOG_PATH=/var/log/qdb
 
 # Database
