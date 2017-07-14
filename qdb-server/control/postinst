@@ -17,7 +17,7 @@ chown -R $USER:$GROUP $LOG_PATH
 
 # Config
 mkdir -p $ETC_PATH
-[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH > $ETC_PATH/qdbd.conf
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=false > $ETC_PATH/qdbd.conf
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
