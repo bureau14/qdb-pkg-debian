@@ -5,6 +5,7 @@ GROUP="$USER"
 ETC_PATH=/etc/qdb
 LOG_PATH=/var/log/qdb_http
 WWW_PATH=/usr/share/qdb/www
+SHARE_PATH=/usr/share/qdb
 
 # Log
 mkdir -p $LOG_PATH
@@ -12,7 +13,14 @@ chown $USER:$GROUP $LOG_PATH
 
 # Config
 mkdir -p /etc/qdb
-[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH > $ETC_PATH/qdb_httpd.conf
+
+# add user for qdb_httpd
+qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
+chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
+chmod 0400 $ETC_PATH/qdb_httpd_private.key
+
+# set up with security
+[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH --cluster-public-key-file=$SHARE_PATH/cluster_public.key --user-credentials-file=$ETC_PATH/qdb_httpd_private.key > $ETC_PATH/qdb_httpd.conf
 
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 

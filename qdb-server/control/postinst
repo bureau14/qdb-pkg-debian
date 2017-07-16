@@ -3,6 +3,7 @@
 USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
+SHARE_PATH=/usr/share/qdb
 DB_PATH=/var/lib/qdb
 LOG_PATH=/var/log/qdb
 
@@ -15,9 +16,27 @@ mkdir -p $LOG_PATH
 touch $LOG_PATH/qdbd.log
 chown -R $USER:$GROUP $LOG_PATH
 
-# Config
+# share
+mkdir -p $SHARE_PATH
+chown -R $USER:$GROUP $SHARE_PATH
+
+# configuration dir
 mkdir -p $ETC_PATH
-[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=false > $ETC_PATH/qdbd.conf
+
+# key generation
+qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
+chown $USER:$GROUP $ETC_PATH/cluster_private.key
+chmod 0600 $ETC_PATH/cluster_private.key
+chown $USER:$GROUP $SHARE_PATH/cluster_public.key
+chmod 0644 $SHARE_PATH/cluster_public.key
+
+# add user for qdbsh
+qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
+chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
+chmod 0600 $ETC_PATH/qdbsh_private.key
+
+# Config
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
