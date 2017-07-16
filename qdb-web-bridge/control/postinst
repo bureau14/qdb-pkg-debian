@@ -17,7 +17,7 @@ mkdir -p /etc/qdb
 # add user for qdb_httpd
 qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
 chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
-chmod 0400 $ETC_PATH/qdb_httpd_private.key
+chmod 0600 $ETC_PATH/qdb_httpd_private.key
 
 # set up with security
 [ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH --cluster-public-key-file=$SHARE_PATH/cluster_public.key --user-credentials-file=$ETC_PATH/qdb_httpd_private.key > $ETC_PATH/qdb_httpd.conf
