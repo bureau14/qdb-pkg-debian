@@ -1,0 +1,100 @@
+#!/bin/sh
+
+set -e
+
+# [api]
+ln -sf libqdb_api-$QDB_VERSION.so /usr/lib/libqdb_api.so
+ln -sf qdb-$QDB_VERSION /usr/include/qdb
+
+ldconfig
+
+
+# [server]
+USER="qdb"
+GROUP="$USER"
+ETC_PATH=/etc/qdb
+SHARE_PATH=/usr/share/qdb
+DB_PATH=/var/lib/qdb
+LOG_PATH=/var/log/qdb
+
+# Database
+mkdir -p $DB_PATH
+chown $USER:$GROUP $DB_PATH
+
+# Log
+mkdir -p $LOG_PATH
+touch $LOG_PATH/qdbd.log
+chown -R $USER:$GROUP $LOG_PATH
+
+# share
+mkdir -p $SHARE_PATH
+chown -R $USER:$GROUP $SHARE_PATH
+
+# configuration dir
+mkdir -p $ETC_PATH
+
+# key generation
+qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
+chown $USER:$GROUP $ETC_PATH/cluster_private.key
+chmod 0600 $ETC_PATH/cluster_private.key
+chown $USER:$GROUP $SHARE_PATH/cluster_public.key
+chmod 0644 $SHARE_PATH/cluster_public.key
+
+# add user for qdbsh
+qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
+chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
+chmod 0600 $ETC_PATH/qdbsh_private.key
+
+# Config
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
+
+sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
+
+chown root:root /usr/share/qdb/upstart/qdbd.conf
+
+if ps -p1 | grep -q systemd; then
+    # caution: systemd doesn't follow symlink
+    cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
+    systemctl daemon-reload
+    systemctl -q enable qdbd.service
+    systemctl start qdbd.service
+else
+    ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
+    initctl reload-configuration
+    initctl start qdbd
+fi
+
+# [web-bridge]
+ETC_PATH=/etc/qdb
+LOG_PATH=/var/log/qdb_http
+WWW_PATH=/usr/share/qdb/www
+SHARE_PATH=/usr/share/qdb
+
+# Log
+mkdir -p $LOG_PATH
+chown $USER:$GROUP $LOG_PATH
+
+# Config
+mkdir -p /etc/qdb
+
+# add user for qdb_httpd
+qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
+chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
+chmod 0600 $ETC_PATH/qdb_httpd_private.key
+
+# set up with security
+[ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH --root=$WWW_PATH --cluster-public-key-file=$SHARE_PATH/cluster_public.key --user-credentials-file=$ETC_PATH/qdb_httpd_private.key > $ETC_PATH/qdb_httpd.conf
+
+chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
+
+if ps -p1 | grep -q systemd; then
+    # caution: systemd doesn't follow symlink
+    cp /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    systemctl daemon-reload
+    systemctl -q enable qdb_httpd.service
+    systemctl start qdb_httpd.service
+else
+    ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
+    initctl reload-configuration
+    initctl start qdb_httpd
+fi

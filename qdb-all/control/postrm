@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# [api]
+set -e
+
+rm -f /usr/lib/libqdb_api.so
+rm -f /usr/include/qdb
+
+ldconfig
+
+# [server]
+USER="qdb"
+GROUP="$USER"
+
+# Allow errors to make sure the package can always be removed
+set +e
+
+if [ "$1" = "purge" ]; then
+    rm -rf /etc/qdb/qdbd.conf
+    rmdir --ignore-fail-on-non-empty /etc/qdb/
+    rm -rf /var/lib/qdb
+    rm -rf /var/run/qdb
+    rm -rf /var/log/qdb
+    rm -rf /etc/qdb/qdb_httpd.conf
+    rm -rf /var/run/qdb_http
+    rm -rf /var/log/qdb_http
+    userdel $USER
+fi
+
+if [ "$1" != "upgrade" ]; then
+    rm -f /etc/systemd/system/qdbd.service
+    rm -f /etc/init/qdbd.conf
+    rm -f /etc/systemd/system/qdb_httpd.service
+    rm -f /etc/init/qdb_httpd.conf
+
+    if ps -p1 | grep -q systemd; then
+        systemctl daemon-reload
+    else
+        initctl reload-configuration
+    fi
+fi
