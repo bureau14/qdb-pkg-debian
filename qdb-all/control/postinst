@@ -46,25 +46,38 @@ echo "-- generate keys --"
 # key generation
 qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
 chown $USER:$GROUP $ETC_PATH/cluster_private.key
-chmod 0600 $ETC_PATH/cluster_private.key
 chown $USER:$GROUP $SHARE_PATH/cluster_public.key
+chmod 0600 $ETC_PATH/cluster_private.key
 chmod 0644 $SHARE_PATH/cluster_public.key
 
 echo "-- add users --"
 
 # add user for qdb_httpd
+
 echo "- add qdb_httpd -"
-qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
-chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
-chmod 0600 $ETC_PATH/qdb_httpd_private.key
+QDB_USER="qdb_httpd"
+
+if [ $(grep -c "\"username\"\s*:\s*\"$QDB_USER\"" users.conf) != 1 ]
+then
+    qdb_user_add -u $QDB_USER -p $ETC_PATH/users.conf -s $ETC_PATH/${QDB_USER}_private.key
+    chown $USER:$GROUP $ETC_PATH/${QDB_USER}_private.key
+    chmod 0600 $ETC_PATH/${QDB_USER}_private.key
+else
+    echo "User $QDB_USER already exists."
+fi
 
 # add user for qdbsh
 echo "- add qdbsh -"
-qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
-chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
-chmod 0600 $ETC_PATH/qdbsh_private.key
+QDB_USER="qdbsh"
 
-cat $ETC_PATH/users.conf
+if [ $(grep -c "\"username\"\s*:\s*\"$QDB_USER\"" users.conf) != 1 ]
+then
+    qdb_user_add -u $QDB_USER -p $ETC_PATH/users.conf -s $ETC_PATH/${QDB_USER}_private.key
+    chown $USER:$GROUP $ETC_PATH/${QDB_USER}_private.key
+    chmod 0600 $ETC_PATH/${QDB_USER}_private.key
+else
+    echo "User $QDB_USER already exists."
+fi
 
 
 echo "-- create default configurations --"
