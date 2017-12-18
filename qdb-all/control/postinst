@@ -20,6 +20,8 @@ LOG_PATH_WEB_BRIDGE=/var/log/qdb_http
 WWW_PATH=/usr/share/qdb/www
 SHARE_PATH=/usr/share/qdb
 
+echo "---- start server and web-bridge install ----"
+
 # Database
 mkdir -p $DB_PATH
 chown $USER:$GROUP $DB_PATH
@@ -31,13 +33,16 @@ chown -R $USER:$GROUP $LOG_PATH
 mkdir -p $LOG_PATH_WEB_BRIDGE
 chown -R $USER:$GROUP $LOG_PATH_WEB_BRIDGE
 
+echo "-- create share folder --"
 # share
 mkdir -p $SHARE_PATH
 chown -R $USER:$GROUP $SHARE_PATH
 
+echo "-- create config folder --"
 # configuration dir
 mkdir -p $ETC_PATH
 
+echo "-- generate keys --"
 # key generation
 qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
 chown $USER:$GROUP $ETC_PATH/cluster_private.key
@@ -45,6 +50,7 @@ chmod 0600 $ETC_PATH/cluster_private.key
 chown $USER:$GROUP $SHARE_PATH/cluster_public.key
 chmod 0644 $SHARE_PATH/cluster_public.key
 
+echo "-- add users --"
 # add user for qdbsh
 qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
 chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
@@ -55,6 +61,7 @@ qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private
 chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
 chmod 0600 $ETC_PATH/qdb_httpd_private.key
 
+echo "-- create default configurations --"
 # Config
 [ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
 
@@ -63,19 +70,26 @@ chmod 0600 $ETC_PATH/qdb_httpd_private.key
 
 chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
 
-
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
 
+echo "-- start services --"
 if ps -p1 | grep -q systemd; then
     # caution: systemd doesn't follow symlink
+    echo "- copy services -"
     cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
     cp -f /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    echo "- daemon reload -"
     systemctl daemon-reload
+    echo "- enable qdbd -"
     systemctl -q enable qdbd.service
-    systemctl -q enable qdb_httpd.service
+    echo "- start qdbd -"
     systemctl start qdbd.service
+
+    echo "- enable qdb_httpd -"
+    systemctl -q enable qdb_httpd.service
+    echo "- start qdb_httpd -"
     systemctl start qdb_httpd.service
 else
     ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
