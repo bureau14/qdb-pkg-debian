@@ -14,14 +14,6 @@ cd $(dirname $0)
 VERSION=$(../common/get_version.sh $TARBALL)
 
 (
-    echo "-------------------------"
-
-    ls -l
-    echo $PWD
-    echo $API_TARBALL
-
-    echo "-------------------------"
-
     rm -rf data
     mkdir -p data
     mkdir -p data/usr
@@ -33,12 +25,10 @@ VERSION=$(../common/get_version.sh $TARBALL)
     cp -r upstart/ data/usr/share/qdb/
     cp -r systemd/ data/usr/share/qdb/
 
-
-
-    tar -xf "$API_TARBALL" -C data/usr
-    tar -xf "$SERVER_TARBALL" -C data/usr
-    tar -xf "$UTILS_TARBALL" -C data/usr
-    tar -xf "$WEB_BRIDGE_TARBALL" -C data/usr
+    tar -xf "../$API_TARBALL" -C data/usr
+    tar -xf "../$SERVER_TARBALL" -C data/usr
+    tar -xf "../$UTILS_TARBALL" -C data/usr
+    tar -xf "../$WEB_BRIDGE_TARBALL" -C data/usr
 
     # Note: .so files are not executable on Debian
     chmod 644 data/usr/lib/libqdb_api.so
