@@ -17,7 +17,6 @@ VERSION=$(../common/get_version.sh $TARBALL)
     rm -rf data
     mkdir -p data
     mkdir -p data/usr
-    cd data
 
     mkdir -p etc/sysctl.d/
     cp sysctl.d/* data/etc/sysctl.d/
