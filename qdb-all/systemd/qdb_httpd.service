@@ -5,8 +5,8 @@ ConditionPathExists=/etc/qdb/qdb_httpd.conf
 
 [Service]
 Type=forking
-User=qdb_http
-Group=qdb_http
+User=qdb
+Group=qdb
 ExecStart=/usr/bin/qdb_httpd -c /etc/qdb/qdb_httpd.conf
 Restart=on-failure
 
