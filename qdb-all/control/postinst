@@ -64,6 +64,8 @@ qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
 chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 chmod 0600 $ETC_PATH/qdbsh_private.key
 
+cat $ETC_PATH/users.conf
+
 
 echo "-- create default configurations --"
 # Config
