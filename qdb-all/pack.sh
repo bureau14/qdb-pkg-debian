@@ -25,6 +25,10 @@ VERSION=$(../common/get_version.sh $TARBALL)
     cp -r upstart/ data/usr/share/qdb/
     cp -r systemd/ data/usr/share/qdb/
 
+    ls -l
+    echo $PWD
+    echo $API_TARBALL
+
     tar -xf "$API_TARBALL" -C data/usr
     tar -xf "$SERVER_TARBALL" -C data/usr
     tar -xf "$UTILS_TARBALL" -C data/usr
