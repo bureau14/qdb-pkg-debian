@@ -21,7 +21,7 @@ VERSION=$(../common/get_version.sh $TARBALL)
     mkdir -p data/etc/sysctl.d/
     cp sysctl.d/* data/etc/sysctl.d/
 
-    mkdir -p usr/share/qdb/
+    mkdir -p data/usr/share/qdb/
     cp -r upstart/ data/usr/share/qdb/
     cp -r systemd/ data/usr/share/qdb/
 
