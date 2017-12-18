@@ -51,15 +51,19 @@ chown $USER:$GROUP $SHARE_PATH/cluster_public.key
 chmod 0644 $SHARE_PATH/cluster_public.key
 
 echo "-- add users --"
+
+# add user for qdb_httpd
+echo "- add qdb_httpd -"
+qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
+chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
+chmod 0600 $ETC_PATH/qdb_httpd_private.key
+
 # add user for qdbsh
+echo "- add qdbsh -"
 qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
 chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 chmod 0600 $ETC_PATH/qdbsh_private.key
 
-# add user for qdb_httpd
-qdb_user_add -u qdb_httpd -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_httpd_private.key
-chown $USER:$GROUP $ETC_PATH/qdb_httpd_private.key
-chmod 0600 $ETC_PATH/qdb_httpd_private.key
 
 echo "-- create default configurations --"
 # Config
@@ -80,8 +84,10 @@ if ps -p1 | grep -q systemd; then
     echo "- copy services -"
     cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
     cp -f /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+
     echo "- daemon reload -"
     systemctl daemon-reload
+
     echo "- enable qdbd -"
     systemctl -q enable qdbd.service
     echo "- start qdbd -"
