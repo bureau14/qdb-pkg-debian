@@ -103,6 +103,18 @@ echo "##teamcity[testFinished name='web-bridge.uninstall']"
 
 
 # [qdb-all tests]
+
+echo "##teamcity[testStarted name='reboot' captureStandardOutput='true']"
+echo "Stop container..."
+sudo lxc-stop -n $CONTAINER_NAME
+sudo lxc-wait -n $CONTAINER_NAME -s STOPPED
+echo "Start container..."
+sudo lxc-start -n $CONTAINER_NAME
+sudo lxc-wait -n $CONTAINER_NAME -s RUNNING
+echo "Wait $DELAY seconds..."
+sleep $DELAY
+echo "##teamcity[testFinished name='reboot']"
+
 # Need to be done separately to avoid conflicts
 echo "##teamcity[testStarted name='all.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_ALL || echo "##teamcity[testFailed name='all.install' message='Failed to install God package']"
