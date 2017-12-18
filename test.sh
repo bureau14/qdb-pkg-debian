@@ -121,12 +121,12 @@ sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_ALL || echo 
 echo "##teamcity[testFinished name='all.install']"
 
 echo "##teamcity[testStarted name='all.qdbsh.put' captureStandardOutput='true']"
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put hello world" || echo "##teamcity[testFailed name='all.qdbsh.put' message='Failed to put blob']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put alias content" || echo "##teamcity[testFailed name='all.qdbsh.put' message='Failed to put blob']"
 echo "##teamcity[testFinished name='all.qdbsh.put']"
 
 echo "##teamcity[testStarted name='all.qdbsh.get' captureStandardOutput='true']"
-RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_get hello") || echo "##teamcity[testFailed name='all.qdbsh.get' message='Failed to get blob']"
-[ "$RESULT" = "world" ] || echo "##teamcity[testFailed name='all.qdbsh.get' message='Invalid output from blob_get']"
+RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_get alias") || echo "##teamcity[testFailed name='all.qdbsh.get' message='Failed to get blob']"
+[ "$RESULT" = "content" ] || echo "##teamcity[testFailed name='all.qdbsh.get' message='Invalid output from blob_get']"
 echo "##teamcity[testFinished name='all.qdbsh.get']"
 
 echo "##teamcity[testStarted name='all.web-bridge.wget' captureStandardOutput='true']"
