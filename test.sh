@@ -120,6 +120,17 @@ echo "##teamcity[testStarted name='all.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_ALL || echo "##teamcity[testFailed name='all.install' message='Failed to install God package']"
 echo "##teamcity[testFinished name='all.install']"
 
+echo "##teamcity[testStarted name='reboot' captureStandardOutput='true']"
+echo "Stop container..."
+sudo lxc-stop -n $CONTAINER_NAME
+sudo lxc-wait -n $CONTAINER_NAME -s STOPPED
+echo "Start container..."
+sudo lxc-start -n $CONTAINER_NAME
+sudo lxc-wait -n $CONTAINER_NAME -s RUNNING
+echo "Wait $DELAY seconds..."
+sleep $DELAY
+echo "##teamcity[testFinished name='reboot']"
+
 echo "##teamcity[testStarted name='all.qdbsh.put' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put alias content" || echo "##teamcity[testFailed name='all.qdbsh.put' message='Failed to put blob']"
 echo "##teamcity[testFinished name='all.qdbsh.put']"

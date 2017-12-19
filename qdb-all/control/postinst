@@ -100,14 +100,6 @@ chown root:root /usr/share/qdb/upstart/qdbd.conf
 
 echo "-- start services --"
 if ps -p1 | grep -q systemd; then
-    ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
-    ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
-
-    initctl reload-configuration
-    
-    initctl start qdbd
-    initctl start qdb_httpd
-    
     # caution: systemd doesn't follow symlink
     echo "- copy services -"
     cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
