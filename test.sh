@@ -144,6 +144,16 @@ echo "Wait $DELAY seconds..."
 sleep $DELAY
 echo "##teamcity[testFinished name='reboot']"
 
+echo "##teamcity[testStarted name='all.qdbsh.get.after-reboot' captureStandardOutput='true']"
+RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_get alias") || echo "##teamcity[testFailed name='all.qdbsh.get.after-reboot' message='Failed to get blob']"
+[ "$RESULT" = "content" ] || echo "##teamcity[testFailed name='all.qdbsh.get' message='Invalid output from blob_get']"
+echo "##teamcity[testFinished name='all.qdbsh.get.after-reboot']"
+
+echo "##teamcity[testStarted name='all.web-bridge.wget.after-reboot' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- wget -qS http://127.0.0.1:8080 2>&1 || echo "##teamcity[testFailed name='all.web-bridge.wget.after-reboot' message='Failed to wget 127.0.0.1:8080']"
+echo "##teamcity[testFinished name='all.web-bridge.wget.after-reboot']"
+
+
 echo "##teamcity[testStarted name='all.uninstall' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -r qdb-all || echo "##teamcity[testFailed name='all.uninstall' message='Failed to uninstall God package']"
 echo "##teamcity[testFinished name='all.uninstall']"
