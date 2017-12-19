@@ -4,7 +4,7 @@ set -eu
 
 USER="qdb"
 GROUP="$USER"
-HOME="/var/lib/qdb_http"
+HOME="/var/lib/qdb"
 
 # If we use NIS then errors should be tolerated.
 if which ypwhich >/dev/null 2>&1 && ypwhich >/dev/null 2>&1
@@ -25,7 +25,7 @@ then
         --disabled-login \
         --ingroup $GROUP \
         --home $HOME \
-        --gecos "quasardb web bridge" \
+        --gecos "quasardb all packages" \
         --shell /bin/false \
         $USER  >/dev/null
 fi

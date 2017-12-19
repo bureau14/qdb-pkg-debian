@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USER="qdb_http"
+USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
 LOG_PATH=/var/log/qdb_http

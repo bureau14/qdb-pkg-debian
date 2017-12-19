@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USER="qdb_http"
+USER="qdb"
 GROUP="$USER"
 
 # Allow errors to make sure the package can always be removed
@@ -12,7 +12,9 @@ if [ "$1" = "purge" ]; then
     rm -rf /var/lib/qdb
     rm -rf /var/run/qdb
     rm -rf /var/log/qdb
-    userdel qdb
+    if ! type qdb_httpd &> /dev/null; then
+        userdel $USER
+    fi
 fi
 
 if [ "$1" != "upgrade" ]; then

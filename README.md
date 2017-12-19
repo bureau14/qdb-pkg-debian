@@ -18,3 +18,8 @@ This repository contains script that transforms the quasardb tarballs into .deb 
     cd qdb-server
     wget https://download.quasardb.net/quasardb/2.0/2.0.0rc7/server/qdb-2.0.0-linux-64bit-server.tar.gz
     ./pack-server.sh qdb-2.0.0-linux-64bit-server.tar.gz
+
+# Warning
+If you experience a problem while installing or upgrading after previously uninstalling an older version you can need to check the rights for the following files and folders. They should be `qdb:qdb`.
+- /etc/qdb/qdb_http_private.key
+- /var/log/qdb_http
