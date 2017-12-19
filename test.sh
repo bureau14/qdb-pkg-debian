@@ -125,6 +125,8 @@ sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-fil
 echo "##teamcity[testFinished name='all.qdbsh.put']"
 
 echo "##teamcity[testStarted name='all.qdbsh.get' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- cat /etc/qdb/users.conf
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- cat /etc/qdb/qdbsh_private.key
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_get alias") || echo "##teamcity[testFailed name='all.qdbsh.get' message='Failed to get blob']"
 [ "$RESULT" = "content" ] || echo "##teamcity[testFailed name='all.qdbsh.get' message='Invalid output from blob_get']"
 echo "##teamcity[testFinished name='all.qdbsh.get']"
