@@ -2,7 +2,7 @@
 
 set -eu
 
-USER="qdb_http"
+USER="qdb"
 GROUP="$USER"
 HOME="/var/lib/qdb_http"
 

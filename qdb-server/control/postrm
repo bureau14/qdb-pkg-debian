@@ -12,7 +12,9 @@ if [ "$1" = "purge" ]; then
     rm -rf /var/lib/qdb
     rm -rf /var/run/qdb
     rm -rf /var/log/qdb
-    userdel $USER
+    if ! type qdb_httpd &> /dev/null; then
+        userdel $USER
+    fi
 fi
 
 if [ "$1" != "upgrade" ]; then
