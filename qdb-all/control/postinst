@@ -44,11 +44,16 @@ mkdir -p $ETC_PATH
 
 echo "-- generate keys --"
 # key generation
-qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
-chown $USER:$GROUP $ETC_PATH/cluster_private.key
-chown $USER:$GROUP $SHARE_PATH/cluster_public.key
-chmod 0600 $ETC_PATH/cluster_private.key
-chmod 0644 $SHARE_PATH/cluster_public.key
+if [ -f $ETC_PATH/cluster_private.key ]
+then
+    echo "Cluster keys already exist."
+else
+    qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
+    chown $USER:$GROUP $ETC_PATH/cluster_private.key
+    chown $USER:$GROUP $SHARE_PATH/cluster_public.key
+    chmod 0600 $ETC_PATH/cluster_private.key
+    chmod 0644 $SHARE_PATH/cluster_public.key
+fi
 
 echo "-- add users --"
 
