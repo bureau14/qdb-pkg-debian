@@ -62,7 +62,7 @@ echo "-- add users --"
 echo "- add qdb_httpd -"
 QDB_USER="qdb_httpd"
 
-if [ $(grep -c "\"username\"\s*:\s*\"$QDB_USER\"" $ETC_PATH/users.conf) != 1 ]
+if [ ! -e $ETC_PATH/${QDB_USER}_private.key ]
 then
     qdb_user_add -u $QDB_USER -p $ETC_PATH/users.conf -s $ETC_PATH/${QDB_USER}_private.key
     chown $USER:$GROUP $ETC_PATH/${QDB_USER}_private.key
@@ -75,7 +75,7 @@ fi
 echo "- add qdbsh -"
 QDB_USER="qdbsh"
 
-if [ $(grep -c "\"username\"\s*:\s*\"$QDB_USER\"" $ETC_PATH/users.conf) != 1 ]
+if [ ! -e $ETC_PATH/${QDB_USER}_private.key ]
 then
     qdb_user_add -u $QDB_USER -p $ETC_PATH/users.conf -s $ETC_PATH/${QDB_USER}_private.key
     chown $USER:$GROUP $ETC_PATH/${QDB_USER}_private.key
