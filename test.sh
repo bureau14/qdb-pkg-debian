@@ -15,6 +15,7 @@ QDB_API=$(ls qdb-api/*.deb)
 QDB_SERVER=$(ls qdb-server/*.deb)
 QDB_UTILS=$(ls qdb-utils/*.deb)
 QDB_HTTP=$(ls qdb-web-bridge/*.deb)
+QDB_API_REST=$(ls qdb-api-rest/*.deb)
 
 CONTAINER_CONFIG=test_container.conf
 cat >$CONTAINER_CONFIG <<END
@@ -51,6 +52,10 @@ echo "##teamcity[testFinished name='utils.install']"
 echo "##teamcity[testStarted name='web-bridge.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_HTTP || echo "##teamcity[testFailed name='web-bridge.install' message='Failed to install web-bridge']"
 echo "##teamcity[testFinished name='web-bridge.install']"
+
+echo "##teamcity[testStarted name='api-rest.install' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API_REST || echo "##teamcity[testFailed name='api-rest.install' message='Failed to install api-rest']"
+echo "##teamcity[testFinished name='api-rest.install']"
 
 echo "##teamcity[testStarted name='qdbsh.put' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put hello world" || echo "##teamcity[testFailed name='qdbsh.put' message='Failed to put blob']"
