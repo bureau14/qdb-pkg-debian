@@ -102,6 +102,10 @@ echo "##teamcity[testStarted name='utils.uninstall' captureStandardOutput='true'
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -r qdb-utils || echo "##teamcity[testFailed name='utils.uninstall' message='Failed to uninstall utils']"
 echo "##teamcity[testFinished name='utils.uninstall']"
 
+echo "##teamcity[testStarted name='api-rest.uninstall' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -r qdb-api-rest || echo "##teamcity[testFailed name='api-rest.uninstall' message='Failed to uninstall api-rest']"
+echo "##teamcity[testFinished name='api-rest.uninstall']"
+
 echo "##teamcity[testStarted name='api.uninstall' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -r qdb-api || echo "##teamcity[testFailed name='api.uninstall' message='Failed to uninstall API']"
 echo "##teamcity[testFinished name='api.uninstall']"
