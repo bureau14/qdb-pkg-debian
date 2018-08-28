@@ -1,0 +1,14 @@
+[Unit]
+Description=quasardb web bridge
+After=network.target
+ConditionPathExists=/etc/qdb/qdb-api-rest.conf
+
+[Service]
+Type=forking
+User=qdb
+Group=qdb
+ExecStart=/usr/bin/qdb-api-rest-server --config /etc/qdb/qdb-api-rest.conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

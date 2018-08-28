@@ -1,0 +1,26 @@
+#!/bin/sh
+
+USER="qdb"
+GROUP="$USER"
+ETC_PATH=/etc/qdb
+SHARE_PATH=/usr/share/qdb
+
+# Log
+chown $USER:$GROUP $LOG_PATH
+
+# Config
+mkdir -p /etc/qdb
+
+chown root:root /usr/share/qdb/upstart/qdb_api_rest.cfg
+
+if ps -p1 | grep -q systemd; then
+    # caution: systemd doesn't follow symlink
+    cp /usr/share/qdb/systemd/qdb_api_rest.service /etc/systemd/system/qdb_api_rest.service
+    systemctl daemon-reload
+    systemctl -q enable qdb_api_rest.service
+    systemctl start qdb_api_rest.service
+else
+    ln -sf /usr/share/qdb/upstart/qdb_api_rest.cfg /etc/init/qdb_api_rest.cfg
+    initctl reload-configuration
+    initctl start qdb_api_rest
+fi
