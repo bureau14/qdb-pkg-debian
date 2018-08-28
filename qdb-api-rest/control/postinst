@@ -20,7 +20,6 @@ if [ ! -f $ETC_PATH/qdb-api-rest.cfg ]; then
     cp /usr/share/qdb/default.cfg /etc/qdb/qdb-api-rest.cfg
 fi
 
-
 if ps -p1 | grep -q systemd; then
     # caution: systemd doesn't follow symlink
     cp -f /usr/share/qdb/systemd/qdb_api_rest.service /etc/systemd/system/qdb_api_rest.service
