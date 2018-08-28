@@ -14,6 +14,11 @@ VERSION=$(../common/get_version.sh $TARBALL)
     cd 'data/usr'
 
     tar -xf "$TARBALL"
+
+    mkdir -p usr/share/qdb/
+    cp -r ../upstart/ usr/share/qdb/
+    cp -r ../systemd/ usr/share/qdb/
+    cp share/qdb/default.cfg usr/share/qdb/
 )
 
 ../common/pack.sh $VERSION
