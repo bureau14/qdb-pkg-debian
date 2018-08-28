@@ -9,6 +9,9 @@ sftp-config.json
 /qdb-api/control
 /qdb-api/postinst
 
+/qdb-api-rest/control/md5sums
+/qdb-api-rest/control/control
+
 /qdb-server/md5sums
 /qdb-server/control
 

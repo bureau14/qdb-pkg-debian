@@ -1,0 +1,28 @@
+#!/bin/sh
+
+USER="qdb"
+GROUP="$USER"
+
+# Allow errors to make sure the package can always be removed
+set +e
+
+if [ "$1" = "purge" ]; then
+    rm -rf /etc/qdb/qdb_api_rest.conf
+    rm -rf /etc/qdb/qdb-api-rest.cfg
+    rmdir --ignore-fail-on-non-empty /etc/qdb/
+    rm -rf /var/lib/qdb
+    if ! type qdbd &> /dev/null; then
+        userdel $USER
+    fi
+fi
+
+if [ "$1" != "upgrade" ]; then
+    rm -f /etc/systemd/system/qdb_api_rest.service
+    rm -f /etc/init/qdb_api_rest.conf
+
+    if ps -p1 | grep -q systemd; then
+        systemctl daemon-reload
+    else
+        initctl reload-configuration
+    fi
+fi
