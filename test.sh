@@ -37,6 +37,9 @@ sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get update
 sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -y apt-utils wget
 echo "##teamcity[testFinished name='start']"
 
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt install curl
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt install -f
+
 echo "##teamcity[testStarted name='api.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API || echo "##teamcity[testFailed name='api.install' message='Failed to install API']"
 echo "##teamcity[testFinished name='api.install']"
