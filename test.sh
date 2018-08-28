@@ -34,11 +34,11 @@ sudo lxc-start -n $CONTAINER_NAME
 echo "Wait $DELAY seconds..."
 sleep $DELAY
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get update
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install curl -y
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install -f -y
 sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -y apt-utils wget
 echo "##teamcity[testFinished name='start']"
 
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install curl -y
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install -f -y
 
 echo "##teamcity[testStarted name='api.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API || echo "##teamcity[testFailed name='api.install' message='Failed to install API']"
