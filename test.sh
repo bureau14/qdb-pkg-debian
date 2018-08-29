@@ -69,7 +69,13 @@ echo "##teamcity[testStarted name='api-rest.install' captureStandardOutput='true
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API_REST || echo "##teamcity[testFailed name='api-rest.install' message='Failed to install api-rest']"
 echo "##teamcity[testFinished name='api-rest.install']"
 
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- sed -i -e 's|"allowed_origins":.*|"allowed_origins": ["http://0.0.0.0:3449"],|' /etc/qdb/qdb-api-rest.cfg
+echo "##teamcity[testStarted name='api-rest.set_allowed_origins' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- sed -i -e 's|"allowed_origins":.*|"allowed_origins": ["http://0.0.0.0:3449"],|' /etc/qdb/qdb-api-rest.cfg || echo "##teamcity[testFailed name='api-rest.set_allowed_origins' message='Failed to set allowed origins api-rest']"
+echo "##teamcity[testFinished name='api-rest.set_allowed_origins']"
+
+echo "##teamcity[testStarted name='api-rest.restart' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- service qdb_api_rest restart || echo "##teamcity[testFailed name='api-rest.restart' message='Failed to restart api-rest']"
+echo "##teamcity[testFinished name='api-rest.restart']"
 
 echo "##teamcity[testStarted name='qdbsh.put' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put hello world" || echo "##teamcity[testFailed name='qdbsh.put' message='Failed to put blob']"
@@ -83,6 +89,7 @@ echo "##teamcity[testFinished name='qdbsh.get']"
 echo "##teamcity[testStarted name='qdb-api-rest.login' captureStandardOutput='true']"
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- curl -k -H 'Origin: http://0.0.0.0:3449'  -H 'Content-Type: application/json' -X POST --data-binary @/usr/share/qdb/tintin.private https://127.0.0.1:40000/api/login) || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Failed to login']"
 WITHOUT_PREFIX=${RESULT#\"ey}
+echo "RESULT: $RESULT"
 [ WITHOUT_PREFIX != RESULT ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
 echo "##teamcity[testFinished name='qdb-api-rest.login']"
 
