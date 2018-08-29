@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eu
 
@@ -83,7 +83,8 @@ echo "##teamcity[testFinished name='qdbsh.get']"
 
 echo "##teamcity[testStarted name='qdb-api-rest.login' captureStandardOutput='true']"
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- curl -k -H 'Origin: http://0.0.0.0:3449'  -H 'Content-Type: application/json' -X POST --data-binary @/usr/share/qdb/tintin.private https://127.0.0.1:40000/api/login) || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Failed to login']"
-[[ $RESULT =~ \"ey[^\"]*\"$ ]] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
+WITHOUT_PREFIX=${RESULT#\"ey}
+[ WITHOUT_PREFIX != RESULT ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
 echo "##teamcity[testFinished name='qdb-api-rest.login']"
 
 echo "##teamcity[testStarted name='qdb-benchmark.put' captureStandardOutput='true']"
@@ -179,7 +180,8 @@ echo "##teamcity[testFinished name='all.web-bridge.wget']"
 
 echo "##teamcity[testStarted name='qdb-api-rest.login' captureStandardOutput='true']"
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- curl -k -H 'Origin: http://0.0.0.0:3449'  -H 'Content-Type: application/json' -X POST --data-binary @/usr/share/qdb/tintin.private https://127.0.0.1:40000/api/login) || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Failed to login']"
-[[ $RESULT =~ \"ey[^\"]*\"$ ]] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
+WITHOUT_PREFIX=${RESULT#\"ey}
+[ WITHOUT_PREFIX != RESULT ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
 echo "##teamcity[testFinished name='qdb-api-rest.login']"
 
 echo "##teamcity[testStarted name='reboot' captureStandardOutput='true']"
