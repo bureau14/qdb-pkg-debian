@@ -38,11 +38,6 @@ sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAIN
 sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -f -y
 echo "##teamcity[testFinished name='start']"
 
-
-echo "##teamcity[testStarted name='api.install' captureStandardOutput='true']"
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API || echo "##teamcity[testFailed name='api.install' message='Failed to install API']"
-echo "##teamcity[testFinished name='api.install']"
-
 echo "##teamcity[testStarted name='server.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_SERVER || echo "##teamcity[testFailed name='server.install' message='Failed to install server']"
 echo "##teamcity[testFinished name='server.install']"
@@ -54,6 +49,10 @@ echo "##teamcity[testFinished name='server.add_user']"
 echo "##teamcity[testStarted name='server.restart' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- service qdbd restart  || echo "##teamcity[testFailed name='server.restart' message='Failed to add user']"
 echo "##teamcity[testFinished name='server.restart']"
+
+echo "##teamcity[testStarted name='api.install' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API || echo "##teamcity[testFailed name='api.install' message='Failed to install API']"
+echo "##teamcity[testFinished name='api.install']"
 
 echo "Wait $DELAY seconds..."
 sleep $DELAY
