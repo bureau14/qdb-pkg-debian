@@ -34,9 +34,8 @@ sudo lxc-start -n $CONTAINER_NAME
 echo "Wait $DELAY seconds..."
 sleep $DELAY
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get update
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install curl -y
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- apt-get install -f -y
-sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -y apt-utils wget
+sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -y apt-utils wget curl
+sudo lxc-attach --clear-env --set-var DEBIAN_FRONTEND=noninteractive -n $CONTAINER_NAME -- apt-get install -f -y
 echo "##teamcity[testFinished name='start']"
 
 
@@ -75,7 +74,7 @@ echo "##teamcity[testFinished name='qdbsh.get']"
 
 echo "##teamcity[testStarted name='qdb-api-rest.login' captureStandardOutput='true']"
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- curl -k -H 'Origin: http://0.0.0.0:3449'  -H 'Content-Type: application/json' -X POST --data-binary @/usr/share/qdb/tintin.private https://127.0.0.1:40000/api/login) || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Failed to login']"
-[ "$RESULT" = "world" ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
+[ "$RESULT" =~ "\{ey[^\}]*}" ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
 echo "##teamcity[testFinished name='qdb-api-rest.login']"
 
 echo "##teamcity[testStarted name='qdb-benchmark.put' captureStandardOutput='true']"
