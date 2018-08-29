@@ -5,6 +5,9 @@
 */debian-binary
 sftp-config.json
 
+qdb-all/control/control
+qdb-all/control/md5sums
+
 /qdb-api/md5sums
 /qdb-api/control
 /qdb-api/postinst
@@ -17,3 +20,8 @@ sftp-config.json
 
 /qdb-utils/md5sums
 /qdb-utils/control
+
+qdb-web-bridge/control/control
+qdb-web-bridge/control/md5sums
+
+test_container.conf
