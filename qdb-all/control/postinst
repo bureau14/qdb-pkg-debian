@@ -112,7 +112,7 @@ if ps -p1 | grep -q systemd; then
 else
     ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
     ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
-    ln -sf /usr/share/qdb/upstart/qdb_api_rest.cfg /etc/init/qdb_api_rest.cfg
+    ln -sf /usr/share/qdb/upstart/qdb_api_rest.conf /etc/init/qdb_api_rest.conf
 
     initctl reload-configuration
     

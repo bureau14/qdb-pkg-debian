@@ -27,7 +27,7 @@ if ps -p1 | grep -q systemd; then
     systemctl -q enable qdb_api_rest.service
     systemctl start qdb_api_rest.service
 else
-    ln -sf /usr/share/qdb/upstart/qdb_api_rest.cfg /etc/init/qdb_api_rest.cfg
+    ln -sf /usr/share/qdb/upstart/qdb_api_rest.conf /etc/init/qdb_api_rest.conf
     initctl reload-configuration
     initctl start qdb_api_rest
 fi
