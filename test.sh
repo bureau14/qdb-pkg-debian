@@ -47,6 +47,17 @@ echo "##teamcity[testStarted name='server.install' captureStandardOutput='true']
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_SERVER || echo "##teamcity[testFailed name='server.install' message='Failed to install server']"
 echo "##teamcity[testFinished name='server.install']"
 
+echo "##teamcity[testStarted name='server.add_user' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdb_user_add -u tintin -s /usr/share/qdb/tintin.private -p /etc/qdb/users.conf || echo "##teamcity[testFailed name='server.add_user' message='Failed to add user']"
+echo "##teamcity[testFinished name='server.add_user']"
+
+echo "##teamcity[testStarted name='server.restart' captureStandardOutput='true']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- service qdbd restart  || echo "##teamcity[testFailed name='server.restart' message='Failed to add user']"
+echo "##teamcity[testFinished name='server.restart']"
+
+echo "Wait $DELAY seconds..."
+sleep $DELAY
+
 echo "##teamcity[testStarted name='utils.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_UTILS || echo "##teamcity[testFailed name='utils.install' message='Failed to install utils']"
 echo "##teamcity[testFinished name='utils.install']"
@@ -59,9 +70,7 @@ echo "##teamcity[testStarted name='api-rest.install' captureStandardOutput='true
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_API_REST || echo "##teamcity[testFailed name='api-rest.install' message='Failed to install api-rest']"
 echo "##teamcity[testFinished name='api-rest.install']"
 
-echo "##teamcity[testStarted name='server.add_user' captureStandardOutput='true']"
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdb_user_add -u tintin -s /usr/share/qdb/tintin.private -p /usr/share/qdb/users.cfg || echo "##teamcity[testFailed name='server.add_user' message='Failed to add user']"
-echo "##teamcity[testFinished name='server.add_user']"
+sudo lxc-attach --clear-env -n $CONTAINER_NAME -- sed -i -e 's|"allowed_origins":.*|"allowed_origins": ["http://0.0.0.0:3449"],|' /etc/qdb/qdb-api-rest.cfg
 
 echo "##teamcity[testStarted name='qdbsh.put' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdbsh --cluster-public-key-file=/usr/share/qdb/cluster_public.key --user-credentials-file=/etc/qdb/qdbsh_private.key -c "blob_put hello world" || echo "##teamcity[testFailed name='qdbsh.put' message='Failed to put blob']"
@@ -74,7 +83,7 @@ echo "##teamcity[testFinished name='qdbsh.get']"
 
 echo "##teamcity[testStarted name='qdb-api-rest.login' captureStandardOutput='true']"
 RESULT=$(sudo lxc-attach --clear-env -n $CONTAINER_NAME -- curl -k -H 'Origin: http://0.0.0.0:3449'  -H 'Content-Type: application/json' -X POST --data-binary @/usr/share/qdb/tintin.private https://127.0.0.1:40000/api/login) || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Failed to login']"
-[ "$RESULT" =~ "\{ey[^\}]*}" ] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
+[[ $RESULT =~ \"ey[^\"]*\"$ ]] || echo "##teamcity[testFailed name='qdb-api-rest.login' message='Invalid output from login']"
 echo "##teamcity[testFinished name='qdb-api-rest.login']"
 
 echo "##teamcity[testStarted name='qdb-benchmark.put' captureStandardOutput='true']"
