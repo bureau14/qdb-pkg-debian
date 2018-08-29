@@ -154,14 +154,6 @@ echo "##teamcity[testStarted name='all.install' captureStandardOutput='true']"
 sudo lxc-attach --clear-env -n $CONTAINER_NAME -- dpkg -i /mnt/$QDB_ALL || echo "##teamcity[testFailed name='all.install' message='Failed to install God package']"
 echo "##teamcity[testFinished name='all.install']"
 
-echo "##teamcity[testStarted name='server.add_user' captureStandardOutput='true']"
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- qdb_user_add -u tintin -s /usr/share/qdb/tintin.private -p /etc/qdb/users.conf || echo "##teamcity[testFailed name='server.add_user' message='Failed to add user']"
-echo "##teamcity[testFinished name='server.add_user']"
-
-echo "##teamcity[testStarted name='server.restart' captureStandardOutput='true']"
-sudo lxc-attach --clear-env -n $CONTAINER_NAME -- service qdbd restart  || echo "##teamcity[testFailed name='server.restart' message='Failed to add user']"
-echo "##teamcity[testFinished name='server.restart']"
-
 echo "Wait for qdbd to start: $DELAY seconds..."
 sleep $DELAY
 
