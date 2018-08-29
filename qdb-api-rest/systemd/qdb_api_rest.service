@@ -1,10 +1,10 @@
 [Unit]
-Description=quasardb web bridge
+Description=quasardb api rest
 After=network.target
 ConditionPathExists=/etc/qdb/qdb-api-rest.cfg
 
 [Service]
-Type=forking
+Type=simple
 User=qdb
 Group=qdb
 ExecStart=/usr/bin/qdb-api-rest-server --config-file /etc/qdb/qdb-api-rest.cfg
