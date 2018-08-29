@@ -86,10 +86,18 @@ sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
 
+# Configure API Rest
+openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out $ETC_PATH/rest-api.cert.pem -keyout $ETC_PATH/rest-api.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb" >/dev/null 2>&1
+if [ ! -f $ETC_PATH/qdb-api-rest.cfg ]; then
+    cp /usr/share/qdb/default.cfg /etc/qdb/qdb-api-rest.cfg
+fi
+
+
 if ps -p1 | grep -q systemd; then
     # caution: systemd doesn't follow symlink
     cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
     cp -f /usr/share/qdb/systemd/qdb_httpd.service /etc/systemd/system/qdb_httpd.service
+    cp -f /usr/share/qdb/systemd/qdb_api_rest.service /etc/systemd/system/qdb_api_rest.service
 
     systemctl daemon-reload
 
@@ -98,12 +106,17 @@ if ps -p1 | grep -q systemd; then
 
     systemctl -q enable qdb_httpd.service
     systemctl start qdb_httpd.service
+
+    systemctl -q enable qdb_api_rest.service
+    systemctl start qdb_api_rest.service
 else
     ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
     ln -sf /usr/share/qdb/upstart/qdb_httpd.conf /etc/init/qdb_httpd.conf
+    ln -sf /usr/share/qdb/upstart/qdb_api_rest.cfg /etc/init/qdb_api_rest.cfg
 
     initctl reload-configuration
     
     initctl start qdbd
     initctl start qdb_httpd
+    initctl start qdb_api_rest
 fi

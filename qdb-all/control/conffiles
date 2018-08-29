@@ -1,2 +1,3 @@
 /etc/qdb/qdbd.conf
 /etc/qdb/qdb_httpd.conf
+/etc/qdb/qdb-api-rest.cfg
