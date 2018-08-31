@@ -80,17 +80,20 @@ fi
 # set up with security
 [ -e $ETC_PATH/qdb_httpd.conf ] || qdb_httpd --gen-config --daemonize --log-directory=$LOG_PATH_WEB_BRIDGE --root=$WWW_PATH --cluster-public-key-file=$SHARE_PATH/cluster_public.key --user-credentials-file=$ETC_PATH/qdb_httpd_private.key > $ETC_PATH/qdb_httpd.conf
 
-chown root:root /usr/share/qdb/upstart/qdb_httpd.conf
-
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
-chown root:root /usr/share/qdb/upstart/qdbd.conf
+chown root:root $SHARE_PATH/upstart/qdbd.conf
+chown root:root $SHARE_PATH/upstart/qdb_httpd.conf
+chown root:root $SHARE_PATH/upstart/qdb_api_rest.conf
 
 # Configure API Rest
 openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out $ETC_PATH/rest-api.cert.pem -keyout $ETC_PATH/rest-api.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb" >/dev/null 2>&1
+
 if [ ! -f $ETC_PATH/qdb-api-rest.cfg ]; then
     cp /usr/share/qdb/default.cfg /etc/qdb/qdb-api-rest.cfg
 fi
+
+chown -R $USER:$GROUP $ETC_PATH
 
 
 if ps -p1 | grep -q systemd; then
