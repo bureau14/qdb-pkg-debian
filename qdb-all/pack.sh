@@ -6,6 +6,7 @@ API_TARBALL=$(ls *-c-api.tar.gz)
 SERVER_TARBALL=$(ls *-server.tar.gz)
 UTILS_TARBALL=$(ls *-utils.tar.gz)
 WEB_BRIDGE_TARBALL=$(ls *-web-bridge.tar.gz)
+API_REST_TARBALL=$(ls *-api-rest.tar.gz)
 
 TARBALL=$(readlink -e $1)
 
@@ -29,6 +30,7 @@ VERSION=$(../common/get_version.sh $TARBALL)
     tar -xf "../$SERVER_TARBALL" -C data/usr
     tar -xf "../$UTILS_TARBALL" -C data/usr
     tar -xf "../$WEB_BRIDGE_TARBALL" -C data/usr
+    tar -xf "../$API_REST_TARBALL" -C data/usr
 
     # Note: .so files are not executable on Debian
     chmod 644 data/usr/lib/libqdb_api.so

@@ -15,6 +15,11 @@ if ps -p1 | grep -q systemd; then
         systemctl stop qdb_httpd.service
     fi
 
+    if systemctl is-active -q qdb_api_rest ; then
+        echo "Stopping qdb_api_rest..."
+        systemctl stop qdb_api_rest.service
+    fi
+
 else
 
     if initctl status qdbd | grep -q running; then
@@ -25,6 +30,11 @@ else
     if initctl status qdb_httpd | grep -q running; then
         echo "Stopping qdb_httpd..."
         initctl --quiet stop qdb_httpd
+    fi
+
+    if initctl status qdb_api_rest | grep -q running; then
+        echo "Stopping qdb_api_rest..."
+        initctl --quiet stop qdb_api_rest
     fi
 
 fi

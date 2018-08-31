@@ -1,0 +1,10 @@
+Package: qdb-api-rest
+Version: $QDB_VERSION-1
+Section: database
+Priority: optional
+Architecture: amd64
+Maintainer: quasardb SAS <contact@quasardb.net>
+Homepage: https://www.quasardb.net/
+Depends: libc6 (>= 2.12), qdb-api (= $QDB_VERSION-1)
+Description: quasardb api rest
+ quasardb is an advanced, distributed, high-performance key-value store
