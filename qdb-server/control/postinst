@@ -36,7 +36,7 @@ chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 chmod 0600 $ETC_PATH/qdbsh_private.key
 
 # Config
-[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --daemonize --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
+[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
