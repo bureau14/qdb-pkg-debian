@@ -2,19 +2,32 @@
 
 USER="qdb"
 GROUP="$USER"
+ETC_PATH=/etc/qdb
 
 # Allow errors to make sure the package can always be removed
 set +e
 
 if [ "$1" = "purge" ]; then
-    rm -rf /etc/qdb/qdbd.conf
-    rmdir --ignore-fail-on-non-empty /etc/qdb/
+    rm -f $ETC_PATH/qdbd.conf
+    rm -f $ETC_PATH/users.conf
+    rm -f $ETC_PATH/cluster_private.key
+    rm -f $ETC_PATH/qdbsh_private.key
+    rmdir --ignore-fail-on-non-empty $ETC_PATH
     rm -rf /var/lib/qdb
     rm -rf /var/run/qdb
     rm -rf /var/log/qdb
-    if ! type qdb_httpd &> /dev/null; then
-        userdel $USER
-    fi
+    userdel $USER
+fi
+
+if [ "$1" = "remove" ]; then
+    rm -f $ETC_PATH/qdbd.conf
+    rm -f $ETC_PATH/users.conf
+    rm -f $ETC_PATH/cluster_private.key
+    rm -f $ETC_PATH/qdbsh_private.key
+    rmdir --ignore-fail-on-non-empty $ETC_PATH
+    rm -rf /var/run/qdb
+    rm -rf /var/log/qdb
+    userdel $USER
 fi
 
 if [ "$1" != "upgrade" ]; then
