@@ -13,12 +13,13 @@ VERSION=$(../common/get_version.sh $TARBALL)
     mkdir data
     cd data
 
-    
-    mkdir usr
-    tar -xf "$TARBALL" -C usr
 
+    mkdir usr
+    tar -xf "$TARBALL" -C usr/
+
+    mkdir -p etc/qdb/
     mkdir -p usr/share/qdb/
-    cp -r ../upstart/ usr/share/qdb/
+    mv usr/etc/* etc/qdb/
     cp -r ../systemd/ usr/share/qdb/
 )
 

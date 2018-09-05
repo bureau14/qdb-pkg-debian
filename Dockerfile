@@ -6,5 +6,7 @@ FROM ubuntu:latest
 
 RUN apt update \
     && apt upgrade -y \
-    && apt install -y openssl \
+    && apt install -y binutils \
+                      gettext \
+                      openssl \
     && apt clean

@@ -3,34 +3,20 @@
 USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
-SHARE_PATH=/usr/share/qdb
-
-
-# share
-mkdir -p $SHARE_PATH
-chown -R $USER:$GROUP $SHARE_PATH
-
-chown root:root $SHARE_PATH/upstart/qdb_api_rest.conf
 
 # Config
 mkdir -p $ETC_PATH
 
 openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out $ETC_PATH/rest-api.cert.pem -keyout $ETC_PATH/rest-api.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb" >/dev/null 2>&1
 
-if [ ! -f $ETC_PATH/qdb-api-rest.cfg ]; then
-    cp /usr/share/qdb/default.cfg $ETC_PATH/qdb-api-rest.cfg
+if [ ! -f $ETC_PATH/qdb_rest.conf ]; then
+    cp $ETC_PATH/qdb_rest.conf.sample $ETC_PATH/qdb_rest.conf
 fi
 
 chown -R $USER:$GROUP $ETC_PATH
 
-if ps -p1 | grep -q systemd; then
-    # caution: systemd doesn't follow symlink
-    cp -f /usr/share/qdb/systemd/qdb_api_rest.service /etc/systemd/system/qdb_api_rest.service
-    systemctl daemon-reload
-    systemctl -q enable qdb_api_rest.service
-    systemctl start qdb_api_rest.service
-else
-    ln -sf /usr/share/qdb/upstart/qdb_api_rest.conf /etc/init/qdb_api_rest.conf
-    initctl reload-configuration
-    initctl start qdb_api_rest
-fi
+cp -f /usr/share/qdb/systemd/qdb_api_rest.service /etc/systemd/system/qdb_api_rest.service
+
+systemctl daemon-reload 2>&1 || true
+systemctl -q enable qdb_api_rest.service
+systemctl run qdb_api_rest.service 2>&1 || true

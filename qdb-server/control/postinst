@@ -36,20 +36,14 @@ chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 chmod 0600 $ETC_PATH/qdbsh_private.key
 
 # Config
-[ -e $ETC_PATH/qdbd.conf ] || qdbd --gen-config --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
+qdbd --gen-config --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
 chown root:root /usr/share/qdb/upstart/qdbd.conf
 
-if ps -p1 | grep -q systemd; then
-    # caution: systemd doesn't follow symlink
-    cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
-    systemctl daemon-reload
-    systemctl -q enable qdbd.service
-    systemctl start qdbd.service
-else
-    ln -sf /usr/share/qdb/upstart/qdbd.conf /etc/init/qdbd.conf
-    initctl reload-configuration
-    initctl start qdbd
-fi
+cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
+
+systemctl daemon-reload 2>&1 || true
+systemctl -q enable qdbd.service
+systemctl run qdbd.service 2>&1 || true
