@@ -7,10 +7,8 @@ GROUP="$USER"
 set +e
 
 if [ "$1" = "purge" ]; then
-    rm -rf /etc/qdb/qdb_api_rest.conf
-    rm -rf /etc/qdb/qdb-api-rest.cfg
+    rm -rf /etc/qdb/qdb_rest.conf
     rmdir --ignore-fail-on-non-empty /etc/qdb/
-    rm -rf /var/lib/qdb
     if ! type qdbd &> /dev/null; then
         userdel $USER
     fi
