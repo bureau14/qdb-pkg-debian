@@ -15,8 +15,8 @@ if [ "$1" = "purge" ]; then
 fi
 
 if [ "$1" != "upgrade" ]; then
-    rm -f /etc/systemd/system/qdb_api_rest.service
-    rm -f /etc/init/qdb_api_rest.conf
+    rm -f /etc/systemd/system/qdb_rest.service
+    rm -f /etc/init/qdb_rest.conf
 
     if ps -p1 | grep -q systemd; then
         systemctl daemon-reload

@@ -3,23 +3,31 @@ services:
   qdb-server:
     build: qdb-server/
     image: bureau14/qdb-pkg-debian/qdb-server
+    privileged: true
     ports:
       - "2836:2836"
 
   qdb-api:
     build: qdb-api/
     image: bureau14/qdb-pkg-debian/qdb-api
+    links:
+      - "qdb-server"
 
-  qdb-api-rest:
-    build: qdb-api-rest/
+  qdb-rest:
+    build: qdb-rest/
     depends_on:
       - "qdb-api"
-    image: bureau14/qdb-pkg-debian/qdb-api-rest
+    links:
+      - "qdb-server"
+    image: bureau14/qdb-pkg-debian/qdb-rest
     ports:
       - "40000:40000"
+    privileged: true
 
   qdb-utils:
     build: qdb-utils/
     depends_on:
       - "qdb-api"
+    links:
+      - "qdb-server"
     image: bureau14/qdb-pkg-debian/qdb-utils

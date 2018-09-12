@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Allow errors to make sure the package can always be removed
+set +e
+
+if ps -p1 | grep -q systemd; then
+
+    if systemctl is-active -q qdb_rest ; then
+        echo "Stopping qdb_rest..."
+        systemctl stop qdb_rest.service
+    fi
+
+else
+
+    if initctl status qdb_rest | grep -q running; then
+        echo "Stopping qdb_rest..."
+        initctl --quiet stop qdb_rest
+    fi
+
+fi
