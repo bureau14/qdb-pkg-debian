@@ -7,13 +7,16 @@ ETC_PATH=/etc/qdb
 # Config
 mkdir -p $ETC_PATH
 
-openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out $ETC_PATH/rest-api.cert.pem -keyout $ETC_PATH/rest-api.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb" >/dev/null 2>&1
+openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out $ETC_PATH/qdb_rest.cert.pem -keyout $ETC_PATH/qdb_rest.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb"
 
 if [ ! -f $ETC_PATH/qdb_rest.conf ]; then
     cp $ETC_PATH/qdb_rest.conf.sample $ETC_PATH/qdb_rest.conf
 fi
 
 chown -R $USER:$GROUP $ETC_PATH
+
+mkdir /var/log/qdb || true
+chown -R qdb:qdb /var/log/qdb
 
 cp -f /usr/share/qdb/systemd/qdb_rest.service /etc/systemd/system/qdb_rest.service
 

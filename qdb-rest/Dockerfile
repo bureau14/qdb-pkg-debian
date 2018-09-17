@@ -1,5 +1,21 @@
 FROM bureau14/qdb-pkg-debian/qdb-api
 
+RUN apt install -y iproute \
+                   jq \
+                   locales \
+                   nano \
+                   net-tools \
+                   openssl \
+                   wget \
+    && apt clean
+
 COPY qdb-rest*.deb .
 RUN dpkg -i qdb-rest*.deb
 RUN systemctl enable qdb_rest
+
+RUN cat /etc/qdb/qdb_rest.conf \
+    | jq ".cluster_uri = \"qdb://qdb-server:2836\"" \
+    | jq ".tls_host = \"0.0.0.0\"" \
+    > /tmp/qdb_rest.conf.new && \
+    mv /tmp/qdb_rest.conf.new /etc/qdb/qdb_rest.conf && \
+    chown qdb:qdb /etc/qdb/qdb_rest.conf
