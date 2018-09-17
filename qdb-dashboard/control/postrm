@@ -1,0 +1,12 @@
+#!/bin/sh
+
+USER="qdb"
+GROUP="$USER"
+VAR_PATH=/var/lib/qdb
+
+# Allow errors to make sure the package can always be removed
+set +e
+
+if [ "$1" = "purge" ]; then
+    rm -rf $VAR_PATH/assets
+fi

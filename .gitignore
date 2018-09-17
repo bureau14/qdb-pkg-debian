@@ -12,8 +12,8 @@ qdb-all/control/md5sums
 /qdb-api/control
 /qdb-api/postinst
 
-/qdb-api-rest/control/md5sums
-/qdb-api-rest/control/control
+/qdb-rest/control/md5sums
+/qdb-rest/control/control
 
 /qdb-server/md5sums
 /qdb-server/control
@@ -21,7 +21,7 @@ qdb-all/control/md5sums
 /qdb-utils/md5sums
 /qdb-utils/control
 
-qdb-web-bridge/control/control
-qdb-web-bridge/control/md5sums
+qdb-dashboard/control/control
+qdb-dashboard/control/md5sums
 
 test_container.conf
