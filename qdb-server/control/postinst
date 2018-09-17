@@ -40,10 +40,9 @@ qdbd --gen-config --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cl
 
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
-chown root:root /usr/share/qdb/upstart/qdbd.conf
-
-cp -f /usr/share/qdb/systemd/qdbd.service /etc/systemd/system/qdbd.service
+mkdir /usr/lib/systemd/system || true
+cp -f /usr/share/qdb/systemd/qdbd.service /usr/lib/systemd/system/qdbd.service
 
 systemctl daemon-reload 2>&1 || true
-systemctl -q enable qdbd.service
-systemctl run qdbd.service 2>&1 || true
+systemctl enable qdbd.service
+systemctl start qdbd.service 2>&1 || true
