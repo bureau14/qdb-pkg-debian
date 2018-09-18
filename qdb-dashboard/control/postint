@@ -1,0 +1,8 @@
+#!/bin/sh
+
+USER="qdb"
+GROUP="$USER"
+ETC_PATH=/etc/qdb
+VAR_PATH=/var/lib/qdb
+
+sed -i -e 's|"assets":.*|"assets": "'$VAR_PATH'/assets"' $ETC_PATH/qdb_rest.conf
