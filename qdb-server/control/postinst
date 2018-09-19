@@ -24,23 +24,57 @@ chown -R $USER:$GROUP $SHARE_PATH
 mkdir -p $ETC_PATH
 
 # key generation
-qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
-chown $USER:$GROUP $ETC_PATH/cluster_private.key
-chmod 0600 $ETC_PATH/cluster_private.key
-chown $USER:$GROUP $SHARE_PATH/cluster_public.key
-chmod 0644 $SHARE_PATH/cluster_public.key
 
-# add user for qdbsh
-qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
+if [ ! -f $SHARE_PATH/cluster_public.key ]
+then
+    echo "Performing new install, initializing cluster keys"
+
+    qdb_cluster_keygen -s $ETC_PATH/cluster_private.key -p $SHARE_PATH/cluster_public.key
+    chown $USER:$GROUP $ETC_PATH/cluster_private.key
+    chmod 0600 $ETC_PATH/cluster_private.key
+    chown $USER:$GROUP $SHARE_PATH/cluster_public.key
+    chmod 0644 $SHARE_PATH/cluster_public.key
+fi
+
+
+if [ ! -f $ETC_PATH/qdbsh_private.key ]
+then
+    # add user for qdbsh
+    echo "Creating qdbsh user"
+    qdb_user_add -u qdbsh -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
+
+    chmod 0644 $ETC_PATH/users.conf
+    chown $USER:$GROUP $ETC_PATH/users.conf
+
+    chmod 0600 $ETC_PATH/qdbsh_private.key
+    chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
+fi
+
+if [ ! -f $ETC_PATH/qdbd.conf ]
+then
+    # Config
+    echo "Generating default configuration.."
+    qdbd --gen-config \
+         --log-directory=$LOG_PATH \
+         --root=$DB_PATH  \
+         --security=true \
+         --cluster-private-file=$ETC_PATH/cluster_private.key \
+         --user-list=$ETC_PATH/users.conf \
+         > $ETC_PATH/qdbd.conf
+
+    chown $USER:$GROUP $ETC_PATH/qdbd.conf
+fi
+
+echo "Ensuring file permissions are correct"
 chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 chmod 0600 $ETC_PATH/qdbsh_private.key
 
-# Config
-qdbd --gen-config --log-directory=$LOG_PATH --root=$DB_PATH --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf > $ETC_PATH/qdbd.conf
-
+echo "Setting system control variables"
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
-mkdir /usr/lib/systemd/system || true
+echo "Setting up systemd"
+
+mkdir -p /usr/lib/systemd/system
 cp -f /usr/share/qdb/systemd/qdbd.service /usr/lib/systemd/system/qdbd.service
 
 systemctl daemon-reload 2>&1 || true

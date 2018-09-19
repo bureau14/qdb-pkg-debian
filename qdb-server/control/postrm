@@ -4,6 +4,8 @@ USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
 
+#DEBHELPER#
+
 # Allow errors to make sure the package can always be removed
 set +e
 
@@ -30,13 +32,16 @@ if [ "$1" = "remove" ]; then
     userdel $USER
 fi
 
-if [ "$1" != "upgrade" ]; then
-    rm -f /etc/systemd/system/qdbd.service
-    rm -f /etc/init/qdbd.conf
+if [ "$1" = "upgrade" ]
+then
+    systemctl daemon-reload
+    systemctl restart qdbd
+else
+    systemctl stop qdbd
+    systemctl disable qdbd
+    rm -f /usr/lib/systemd/system/qdbd.service || true
 
-    if ps -p1 | grep -q systemd; then
-        systemctl daemon-reload
-    else
-        initctl reload-configuration
-    fi
+    systemctl daemon-reload
+
+
 fi
