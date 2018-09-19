@@ -31,8 +31,6 @@ services:
     links:
       - "qdb-server"
     image: bureau14/qdb-pkg-debian/qdb-dashboard
-    ports:
-      - "40001:40000"
     privileged: true
 
   qdb-utils:
@@ -41,5 +39,6 @@ services:
       - "qdb-api"
     links:
       - "qdb-server"
+      - "qdb-dashboard"
       - "qdb-rest"
     image: bureau14/qdb-pkg-debian/qdb-utils
