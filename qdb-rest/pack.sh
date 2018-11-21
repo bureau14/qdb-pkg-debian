@@ -19,7 +19,9 @@ VERSION=$(../common/get_version.sh $TARBALL)
 
     mkdir -p etc/qdb/
     mkdir -p usr/share/qdb/
+    mkdir -p var/lib/qdb/assets
     mv usr/etc/* etc/qdb/
+    mv usr/assets/* var/lib/qdb/assets/
     cp -r ../systemd/ usr/share/qdb/
 )
 

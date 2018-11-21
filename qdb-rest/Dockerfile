@@ -18,6 +18,7 @@ RUN cat /etc/qdb/qdb_rest.conf \
     | jq ".cluster_uri = \"qdb://qdb-server:2836\"" \
     | jq ".host = \"0.0.0.0\"" \
     | jq ".port = 40000" \
+    | jq ".assets = \"/var/lib/qdb/assets\"" \
     > /tmp/qdb_rest.conf.new && \
     mv /tmp/qdb_rest.conf.new /etc/qdb/qdb_rest.conf && \
     chown qdb:qdb /etc/qdb/qdb_rest.conf
