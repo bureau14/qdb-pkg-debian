@@ -56,7 +56,8 @@ then
     echo "Generating default configuration.."
     qdbd --gen-config \
          --log-directory=$LOG_PATH \
-         --root=$DB_PATH  \
+         --storage-engine=rocksdb \
+         --rocksdb-root=$DB_PATH  \
          --security=true \
          --cluster-private-file=$ETC_PATH/cluster_private.key \
          --user-list=$ETC_PATH/users.conf \
