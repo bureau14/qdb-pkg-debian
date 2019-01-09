@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+. /usr/share/debconf/confmodule
 
 USER="qdb"
 GROUP="$USER"
@@ -23,7 +25,13 @@ chown -R $USER:$GROUP $SHARE_PATH
 # configuration dir
 mkdir -p $ETC_PATH
 
-# key generation
+db_input high qdb-server/security
+db_go
+
+db_get qdb-server/security
+
+SECURITY_ENABLED=${RET}
+echo "security enabled = ${SECURITY_ENABLED}"
 
 if [ ! -f $SHARE_PATH/cluster_public.key ]
 then
@@ -54,21 +62,17 @@ if [ ! -f $ETC_PATH/qdbd.conf ]
 then
     # Config
     echo "Generating default configuration.."
-    qdbd --gen-config \
-         --log-directory=$LOG_PATH \
-         --storage-engine=rocksdb \
-         --rocksdb-root=$DB_PATH  \
-         --security=true \
-         --cluster-private-file=$ETC_PATH/cluster_private.key \
-         --user-list=$ETC_PATH/users.conf \
-         > $ETC_PATH/qdbd.conf
+    GEN_CONF_OPTS="--log-directory=$LOG_PATH --storage-engine=rocksdb --rocksdb-root=$DB_PATH"
+    if [[ "${SECURITY_ENABLED}" == "true" ]]
+    then
+        GEN_CONF_OPTS="${GEN_CONF_OPTS} --security=true --cluster-private-file=$ETC_PATH/cluster_private.key --user-list=$ETC_PATH/users.conf"
+    else
+        GEN_CONF_OPTS="${GEN_CONF_OPTS} --security=false"
+    fi
+    qdbd --gen-config ${GEN_CONF_OPTS}  > $ETC_PATH/qdbd.conf
 
     chown $USER:$GROUP $ETC_PATH/qdbd.conf
 fi
-
-echo "Ensuring file permissions are correct"
-chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
-chmod 0600 $ETC_PATH/qdbsh_private.key
 
 echo "Setting system control variables"
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
@@ -81,3 +85,5 @@ cp -f /usr/share/qdb/systemd/qdbd.service /usr/lib/systemd/system/qdbd.service
 systemctl daemon-reload 2>&1 || true
 systemctl enable qdbd.service
 systemctl start qdbd.service 2>&1 || true
+
+db_stop
