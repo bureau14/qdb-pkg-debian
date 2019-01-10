@@ -34,14 +34,14 @@ fi
 
 if [ "$1" = "upgrade" ]
 then
-    systemctl daemon-reload
-    systemctl restart qdbd
+    systemctl daemon-reload 2>&1 || true
+    systemctl restart qdbd 2>&1 || true
 else
-    systemctl stop qdbd
-    systemctl disable qdbd
+    systemctl stop qdbd 2>&1 || true
+    systemctl disable qdbd 2>&1 || true
     rm -f /usr/lib/systemd/system/qdbd.service || true
 
-    systemctl daemon-reload
+    systemctl daemon-reload 2>&1 || true
 
 
 fi

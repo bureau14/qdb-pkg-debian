@@ -83,7 +83,7 @@ mkdir -p /usr/lib/systemd/system
 cp -f /usr/share/qdb/systemd/qdbd.service /usr/lib/systemd/system/qdbd.service
 
 systemctl daemon-reload 2>&1 || true
-systemctl enable qdbd.service
+systemctl enable qdbd.service 2>&1 || true
 systemctl start qdbd.service 2>&1 || true
 
 db_stop
