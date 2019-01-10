@@ -1,0 +1,13 @@
+
+Template: qdb-server/security
+Type: boolean
+Default: false
+Description: Enable security?
+ QuasarDB has a built-in authentication mechanism based on asymetric
+ cryptography. This provides built-in support for full traffic encryption
+ as well as message integrity. Traffic encryption requires authentication
+ to be turned on.
+ .
+ If this is a production install, we recommend to enable security. If
+ you are installing QuasarDB for evaluation and/or development purposes,
+ we recommend to disable it.
