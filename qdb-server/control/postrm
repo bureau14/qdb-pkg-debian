@@ -3,6 +3,7 @@
 USER="qdb"
 GROUP="$USER"
 ETC_PATH=/etc/qdb
+SHARE_PATH=/usr/share/qdb
 
 #DEBHELPER#
 
@@ -25,7 +26,7 @@ if [ "$1" = "remove" ]; then
     rm -f $ETC_PATH/qdbd.conf
     rm -f $ETC_PATH/users.conf
     rm -f $ETC_PATH/cluster_private.key
-    rm -f $ETC_PATH/cluster_public.key
+    rm -f $SHARE_PATH/cluster_public.key
     rm -f $ETC_PATH/qdbsh_private.key
     rmdir --ignore-fail-on-non-empty $ETC_PATH
     rm -rf /var/run/qdb
