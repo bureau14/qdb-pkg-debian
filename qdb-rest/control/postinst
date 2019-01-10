@@ -22,4 +22,4 @@ cp -f /usr/share/qdb/systemd/qdb_rest.service /etc/systemd/system/qdb_rest.servi
 
 systemctl daemon-reload 2>&1 || true
 systemctl -q enable qdb_rest.service
-systemctl run qdb_rest.service 2>&1 || true
+systemctl start qdb_rest.service 2>&1 || true
