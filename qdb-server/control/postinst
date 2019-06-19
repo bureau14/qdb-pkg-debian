@@ -49,7 +49,7 @@ if [ ! -f $ETC_PATH/qdbsh_private.key ]
 then
     # add user for qdbsh
     echo "Creating qdbsh user"
-    qdb_user_add -u qdbsh --uid=3 --superuser=0 --privileges=510 -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
+    qdb_user_add -u qdbsh --uid=3 --superuser=0 --privileges=16894 -p $ETC_PATH/users.conf -s $ETC_PATH/qdbsh_private.key
 
     chmod 0644 $ETC_PATH/users.conf
     chown $USER:$GROUP $ETC_PATH/users.conf
