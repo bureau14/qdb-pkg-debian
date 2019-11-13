@@ -1,10 +1,10 @@
 Package: qdb-utils
-Version: $QDB_VERSION-1
+Version: $QDB_VERSION
 Section: database
 Priority: optional
 Architecture: amd64
 Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
-Depends: libc6 (>= 2.12), qdb-api (= $QDB_VERSION-1)
+Depends: libc6 (>= 2.12), qdb-api (= $QDB_VERSION)
 Description: quasardb client utilities
  quasardb is an advanced, distributed, high-performance key-value store
