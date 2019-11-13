@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 PACKAGE_TARBALL=$(readlink -e $1); shift
 PACKAGE_VERSION=$1; shift

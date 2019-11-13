@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 QDB_VERSION=$1
 PACKAGE_NAME=$(basename $(pwd))
