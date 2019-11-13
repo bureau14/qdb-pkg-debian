@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-set -eu
+set -eux
 
 QDB_VERSION=$1
 PACKAGE_NAME=$(basename $(pwd))
-DEB_FILENAME="${PACKAGE_NAME}_$QDB_VERSION-1.deb"
+DEB_FILENAME="${PACKAGE_NAME}_$QDB_VERSION.deb"
 COPYRIGHT="$(dirname $(readlink -e $0))/copyright"
 
 rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
