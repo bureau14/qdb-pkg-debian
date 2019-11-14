@@ -6,12 +6,9 @@ PACKAGE_TARBALL=$(readlink -e $1); shift
 PACKAGE_VERSION=$1; shift
 cd $(dirname $0)
 
+PACKAGE_VERSION=$(../common/get_version.sh ${PACKAGE_TARBALL} ${PACKAGE_VERSION})
 
-if [[ ${PACKAGE_VERSION} == "nightly" ]]; then
-    PACKAGE_VERSION=$(../common/get_version.sh ${PACKAGE_TARBALL})
-    PACKAGE_VERSION=$PACKAGE_VERSION-0.0
-    echo "No package version provided. Setting PACKAGE_VERSION: ${PACKAGE_VERSION}"
-fi
+echo "Set PACKAGE_VERSION: ${PACKAGE_VERSION}"
 
 (
     rm -rf data
