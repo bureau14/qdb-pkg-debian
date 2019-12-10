@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Note: this file is *not* used in the actual .deb package, only for our
+# own integration tests. As such it's fine to use jq as we control the
+# environment.
+
 IP=`which ip`
 AWK=`which awk`
 
