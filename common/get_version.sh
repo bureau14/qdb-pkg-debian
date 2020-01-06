@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-TARBALL=$1
-INPUT_VERSION=$2
+VERSION="3.6.0~nightly"
 
-VERSION="${INPUT_VERSION}"
-
-if [[ "${INPUT_VERSION}" =~ ([0-9.]+)master ]]
+if [[ "${VERSION}" =~ ([0-9.]+)~nightly ]]
 then
     # Nightly
     DATE=$(date +'%Y%m%d')
