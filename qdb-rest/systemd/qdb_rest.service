@@ -1,5 +1,5 @@
 [Unit]
-Description=quasardb api rest
+Description=quasardb REST API
 After=network.target
 ConditionPathExists=/etc/qdb/qdb_rest.conf
 

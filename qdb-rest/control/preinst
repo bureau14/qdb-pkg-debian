@@ -25,7 +25,7 @@ then
         --disabled-login \
         --ingroup $GROUP \
         --home $HOME \
-        --gecos "quasardb api rest" \
+        --gecos "quasardb REST API" \
         --shell /bin/false \
         $USER  >/dev/null
 fi
