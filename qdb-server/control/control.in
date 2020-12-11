@@ -1,4 +1,4 @@
-Package: qdb-server
+Package: $PACKAGE_NAME
 Version: $QDB_VERSION-1
 Section: database
 Priority: optional

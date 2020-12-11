@@ -4,6 +4,9 @@ set -eux
 
 QDB_VERSION=$1
 PACKAGE_NAME=$(basename $(pwd))
+if [[ $IS_CORE2_ARCH ]]; then
+	$PACKAGE_NAME="$PACKAGE_NAME-core2"
+fi
 DEB_FILENAME="${PACKAGE_NAME}_$QDB_VERSION.deb"
 COPYRIGHT="$(dirname $(readlink -e $0))/copyright"
 

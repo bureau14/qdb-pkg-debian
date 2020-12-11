@@ -1,4 +1,4 @@
-Package: qdb-rest
+Package: $PACKAGE_NAME
 Version: $QDB_VERSION
 Section: database
 Priority: optional

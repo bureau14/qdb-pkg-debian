@@ -1,4 +1,4 @@
-Package: qdb-api
+Package: $PACKAGE_NAME
 Version: $QDB_VERSION
 Section: database
 Priority: optional
