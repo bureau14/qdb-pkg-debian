@@ -1,11 +1,10 @@
-FROM solita/ubuntu-systemd
+FROM ubuntu:20.04
+
+# Fixing debconf warning about TERM
+ENV        DEBIAN_FRONTEND teletype
 
 RUN apt-get update \
-        && apt-get install -y iproute \
-                              jq \
-                              locales \
-                              net-tools \
-                              wget \
+    && apt-get install -y --no-install-recommends apt-utils iproute2 jq less locales net-tools dnsutils telnet wget \
     && apt-get clean
 
 RUN locale-gen en_US.UTF-8
@@ -13,19 +12,13 @@ RUN locale-gen en_US.UTF-8
 COPY qdb-server*.deb .
 RUN dpkg -i qdb-server*.deb
 
-COPY fix-config.sh /
+# Add the wrapper script
+ADD        qdbd-docker-wrapper.sh /opt/qdb/scripts/
 
-# Hack for /fix-config.sh
-RUN chmod 777 /etc/qdb/qdbd.conf
-RUN chmod 777 /fix-config.sh
-
-
-RUN cat /usr/lib/systemd/system/qdbd.service \
-    | sed '/\[Service\]/a ExecStartPre=/fix-config.sh' \
-    | grep -v 'User=' \
-    | grep -v 'Group=' \
-    > /usr/lib/systemd/system/qdbd.service.new \
-    && mv /usr/lib/systemd/system/qdbd.service.new /usr/lib/systemd/system/qdbd.service
+# Hack for docker wrapper
+RUN        chmod 777 /etc/qdb/qdbd.conf
+RUN        chmod +x /etc/qdb/qdbd.conf
 
 
-RUN systemctl enable qdbd
+# Always launch qdb process
+ENTRYPOINT ["/opt/qdb/scripts/qdbd-docker-wrapper.sh"]
