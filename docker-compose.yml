@@ -4,9 +4,6 @@ services:
     build: qdb-server/
     image: bureau14/qdb-pkg-debian/qdb-server
     privileged: true
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-
     ports:
       - "2836:2836"
 
