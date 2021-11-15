@@ -4,6 +4,9 @@
 
 FROM ubuntu:latest
 
+# Fixing debconf warning about TERM
+ENV DEBIAN_FRONTEND teletype
+
 RUN apt update \
         && apt upgrade -y \
         && apt install -y binutils \
