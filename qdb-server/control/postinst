@@ -77,13 +77,20 @@ fi
 echo "Setting system control variables"
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
-echo "Setting up systemd"
+LOGROTATE_PATH="/etc/logrotate.d"
+if [[ -d ${LOGROTATE_PATH} ]]
+then
+    echo "Setting up logrotate template for qdbd logs"
+    cp -f /usr/share/qdb/logrotate.d/qdbd /etc/logrotate.d/qdbd
+fi
 
+echo "Setting up systemd"
 mkdir -p /usr/lib/systemd/system
 cp -f /usr/share/qdb/systemd/qdbd.service /usr/lib/systemd/system/qdbd.service
 
 systemctl daemon-reload 2>&1 || true
 systemctl enable qdbd.service 2>&1 || true
 systemctl start qdbd.service 2>&1 || true
+
 
 db_stop

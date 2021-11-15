@@ -21,8 +21,8 @@ echo "Set PACKAGE_VERSION: ${PACKAGE_VERSION}"
     tar -xf "$PACKAGE_TARBALL" -C usr
 
     mkdir -p usr/share/qdb/
-    cp -r ../upstart/ usr/share/qdb/
     cp -r ../systemd/ usr/share/qdb/
+    cp -r ../logrotate.d/ usr/share/qdb/
 )
 
 ../common/pack.sh $PACKAGE_VERSION
