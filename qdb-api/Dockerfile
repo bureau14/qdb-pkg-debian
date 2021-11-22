@@ -7,4 +7,4 @@ RUN apt-get update \
 RUN locale-gen en_US.UTF-8
 
 COPY qdb-api*.deb .
-RUN dpkg -i qdb-api*.deb
+RUN apt-get install -y ./qdb-api*.deb
