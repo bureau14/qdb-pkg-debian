@@ -10,7 +10,7 @@ RUN apt install -y iproute \
     && apt clean
 
 COPY qdb-rest*.deb .
-RUN dpkg -i qdb-rest*.deb
+RUN apt-get install -y ./qdb-rest*.deb
 RUN systemctl enable qdb_rest
 
 RUN cat /etc/qdb/qdb_rest.conf \

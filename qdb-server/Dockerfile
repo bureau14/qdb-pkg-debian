@@ -10,7 +10,7 @@ RUN apt-get update \
 RUN locale-gen en_US.UTF-8
 
 COPY qdb-server*.deb .
-RUN dpkg -i qdb-server*.deb
+RUN apt-get install -y ./qdb-server*.deb
 
 # Add the wrapper script
 ADD        qdbd-docker-wrapper.sh /opt/qdb/scripts/
