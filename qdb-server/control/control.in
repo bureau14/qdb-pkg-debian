@@ -1,5 +1,5 @@
 Package: qdb-server
-Version: $QDB_VERSION-1
+Version: $QDB_VERSION
 Section: database
 Priority: optional
 Architecture: amd64
