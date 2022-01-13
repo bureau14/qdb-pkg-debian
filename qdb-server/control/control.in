@@ -6,6 +6,6 @@ Architecture: amd64
 Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
 Pre-Depends: adduser
-Depends: libc6 (>= 2.12), logrotate
+Depends: libc6 (>= 2.17), logrotate
 Description: quasardb server
  quasardb is an advanced, distributed, high-performance key-value store
