@@ -74,6 +74,13 @@ then
     chown $USER:$GROUP $ETC_PATH/qdbd.conf
 fi
 
+if [ ! -f $ETC_PATH/qdbd.env ]
+then
+    echo "Generating placeholder qdbd.env"
+    touch $ETC_PATH/qdbd.env
+    chown $USER:$GROUP $ETC_PATH/qdbd.env
+fi
+
 echo "Setting system control variables"
 sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
 
