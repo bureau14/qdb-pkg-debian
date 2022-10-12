@@ -58,6 +58,16 @@ then
     chown $USER:$GROUP $ETC_PATH/qdbsh_private.key
 fi
 
+if [ ! -f $ETC_PATH/qdb_rest_private.key ]
+then
+
+    echo "Creating qdb_rest user"
+    qdb_user_add -u qdb_rest --uid=4 --superuser=0 --privileges=16894 -p $ETC_PATH/users.conf -s $ETC_PATH/qdb_rest_private.key
+
+    chmod 0600 $ETC_PATH/qdb_rest_private.key
+    chown $USER:$GROUP $ETC_PATH/qdb_rest_private.key
+fi
+
 if [ ! -f $ETC_PATH/qdbd.conf ]
 then
     # Config
