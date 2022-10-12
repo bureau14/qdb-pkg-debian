@@ -15,6 +15,7 @@ if [ "$1" = "purge" ]; then
     rm -f $ETC_PATH/users.conf
     rm -f $ETC_PATH/cluster_private.key
     rm -f $ETC_PATH/qdbsh_private.key
+    rm -f $ETC_PATH/qdb_rest_private.key
     rmdir --ignore-fail-on-non-empty $ETC_PATH
     rm -rf /var/lib/qdb
     rm -rf /var/run/qdb
@@ -28,6 +29,7 @@ if [ "$1" = "remove" ]; then
     rm -f $ETC_PATH/cluster_private.key
     rm -f $SHARE_PATH/cluster_public.key
     rm -f $ETC_PATH/qdbsh_private.key
+    rm -f $ETC_PATH/qdb_rest_private.key
     rmdir --ignore-fail-on-non-empty $ETC_PATH
     rm -rf /var/run/qdb
     rm -rf /var/log/qdb
