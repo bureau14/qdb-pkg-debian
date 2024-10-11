@@ -22,4 +22,4 @@ PACKAGE_VERSION=$(../common/get_version.sh)
     cp -r ../systemd/ usr/share/qdb/
 )
 
-../common/pack.sh $PACKAGE_VERSION
+../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION

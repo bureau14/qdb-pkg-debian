@@ -25,4 +25,4 @@ PACKAGE_VERSION=$(../common/get_version.sh)
     mv examples/ share/qdb/
 )
 
-../common/pack.sh $PACKAGE_VERSION
+../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION
