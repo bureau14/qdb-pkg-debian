@@ -15,4 +15,4 @@ PACKAGE_VERSION=$(../common/get_version.sh)
     tar -xf "$PACKAGE_TARBALL"
 )
 
-../common/pack.sh $PACKAGE_VERSION
+../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION

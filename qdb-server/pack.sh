@@ -25,4 +25,4 @@ echo "Set PACKAGE_VERSION: ${PACKAGE_VERSION}"
     cp -r ../logrotate.d/ usr/share/qdb/
 )
 
-../common/pack.sh $PACKAGE_VERSION
+../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION
