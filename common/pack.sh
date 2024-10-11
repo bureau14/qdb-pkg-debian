@@ -2,9 +2,17 @@
 
 set -eux
 
-QDB_VERSION=$1
+PACKAGE_TARBALL=$1
+QDB_VERSION=$2
 PACKAGE_NAME=$(basename $(pwd))
-DEB_FILENAME="${PACKAGE_NAME}_$QDB_VERSION.deb"
+# PACKAGE_ARCH is x86_64 by default, but aarch64 if the tarball contains
+# that name.
+PACKAGE_ARCH="amd64"
+if [[ $PACKAGE_TARBALL == *"aarch64"* ]]; then
+    PACKAGE_ARCH="arm64"
+fi
+
+DEB_FILENAME="${PACKAGE_NAME}_${QDB_VERSION}.${PACKAGE_ARCH}.deb"
 COPYRIGHT="$(dirname $(readlink -e $0))/copyright"
 
 rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
@@ -25,7 +33,7 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	cd 'control'
 
 	find -type f -name '*.in' -exec \
-		sh -c "export QDB_VERSION=$QDB_VERSION; envsubst < \$0 '\$QDB_VERSION' > \${0%.in}" {} \;
+		sh -c "export QDB_VERSION=$QDB_VERSION; export PACKAGE_ARCH=$PACKAGE_ARCH; envsubst '\$QDB_VERSION \$PACKAGE_ARCH' < \$0 > \${0%.in}" {} \;
 	find * -type f -not -name '*.in' | xargs \
 		tar -cvzf '../control.tar.gz' --owner 0 --group 0 --mode g=o
 )

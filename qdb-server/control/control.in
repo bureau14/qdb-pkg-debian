@@ -2,7 +2,7 @@ Package: qdb-server
 Version: $QDB_VERSION
 Section: database
 Priority: optional
-Architecture: amd64
+Architecture: $PACKAGE_ARCH
 Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
 Pre-Depends: adduser

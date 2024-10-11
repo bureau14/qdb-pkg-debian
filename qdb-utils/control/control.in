@@ -2,7 +2,7 @@ Package: qdb-utils
 Version: $QDB_VERSION
 Section: database
 Priority: optional
-Architecture: amd64
+Architecture: $PACKAGE_ARCH
 Maintainer: quasardb SAS <contact@quasardb.net>
 Homepage: https://www.quasardb.net/
 Depends: libc6 (>= 2.17), qdb-api (= $QDB_VERSION)
