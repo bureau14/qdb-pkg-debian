@@ -20,6 +20,7 @@ PACKAGE_VERSION=$(../common/get_version.sh)
     mkdir -p usr/share/qdb/
     mv usr/etc/* etc/qdb/
     cp -r ../systemd/ usr/share/qdb/
+    cp -r ../logrotate.d/ usr/share/qdb/
 )
 
 ../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION

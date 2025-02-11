@@ -20,6 +20,13 @@ chown -R qdb:qdb /var/log/qdb
 
 cp -f /usr/share/qdb/systemd/qdb_rest.service /etc/systemd/system/qdb_rest.service
 
+LOGROTATE_PATH="/etc/logrotate.d"
+if [[ -d ${LOGROTATE_PATH} ]]
+then
+    echo "Setting up logrotate template for qdb-rest logs"
+    cp -f /usr/share/qdb/logrotate.d/qdb_rest /etc/logrotate.d/qdb_rest
+fi
+
 echo "user: "
 mkdir -p /var/lib/qdb/assets/ || true
 cp -rv usr/assets/* /var/lib/qdb/assets/
