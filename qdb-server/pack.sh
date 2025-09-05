@@ -24,8 +24,8 @@ echo "Set PACKAGE_VERSION: ${PACKAGE_VERSION}"
     cp -r ../systemd/ usr/share/qdb/
     cp -r ../logrotate.d/ usr/share/qdb/
 
-    mkdir -p /etc/tmpfiles.d/
-    cp ../tmpfiles.d/* /etc/tmpfiles.d/
+    mkdir -p /usr/lib/tmpfiles.d//
+    cp ../tmpfiles.d/* /usr/lib/tmpfiles.d/
 )
 
 ../common/pack.sh $PACKAGE_TARBALL $PACKAGE_VERSION
