@@ -92,7 +92,7 @@ then
 fi
 
 echo "Setting system control variables"
-sysctl -e -q -p /etc/sysctl.d/30-quasardb.conf 2>&1 || true
+sysctl -e -q -p /etc/sysctl.d/99-quasardb.conf 2>&1 || true
 
 LOGROTATE_PATH="/etc/logrotate.d"
 if [[ -d ${LOGROTATE_PATH} ]]
