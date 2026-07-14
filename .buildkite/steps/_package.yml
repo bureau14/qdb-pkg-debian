@@ -1,0 +1,24 @@
+agents:
+  queue: "default-debian-amd64"
+
+label: "{name}"
+key: "{slug}"
+
+commands:
+  - bash qdb-api/pack.sh *-api.tar.gz
+  - bash qdb-server/pack.sh *-server.tar.gz
+  - bash qdb-utils/pack.sh *-utils.tar.gz
+  - bash qdb-rest/pack.sh *-rest.tar.gz
+
+plugins:
+  - bureau14/qdb-artifacts#master:
+      download:
+        clean: true
+        projects:
+          - project_id: "qdb-pkg-archives"
+            files:
+              - "*.tar.gz"
+      upload:
+        files:
+          - "*.deb"
+      promote: {}
