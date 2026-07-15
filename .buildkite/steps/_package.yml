@@ -5,10 +5,10 @@ label: "{name}"
 key: "{slug}"
 
 commands:
-  - bash qdb-api/pack.sh *-api.tar.gz
-  - bash qdb-server/pack.sh *-server.tar.gz
-  - bash qdb-utils/pack.sh *-utils.tar.gz
-  - bash qdb-rest/pack.sh *-rest.tar.gz
+  - bash qdb-api/pack.sh artifacts/*-api.tar.gz
+  - bash qdb-server/pack.sh artifacts/*-server.tar.gz
+  - bash qdb-utils/pack.sh artifacts/*-utils.tar.gz
+  - bash qdb-rest/pack.sh artifacts/*-rest.tar.gz
 
 plugins:
   - bureau14/qdb-artifacts#master:
@@ -18,6 +18,7 @@ plugins:
           - project_id: "qdb-pkg-archives"
             files:
               - "*.tar.gz"
+            output-dir: artifacts
       upload:
         files:
           - "*.deb"
