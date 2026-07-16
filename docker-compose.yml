@@ -1,4 +1,12 @@
 services:
+  build:
+     build:
+      context: .
+      dockerfile: Dockerfile
+     volumes:
+      - ./:/workdir
+     working_dir: /workdir
+
   qdb-server:
     build: qdb-server/
     image: bureau14/qdb-pkg-debian/qdb-server
