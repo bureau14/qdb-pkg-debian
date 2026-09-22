@@ -23,8 +23,11 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	mkdir -p "usr/share/doc/$PACKAGE_NAME"
 	cp "$COPYRIGHT" "usr/share/doc/$PACKAGE_NAME/copyright"
 
+	# Source archives and the Buildkite container may use a restrictive umask.
+	# Normalize the shipped payload so regular files are readable and directories
+	# and already-executable binaries can be traversed/executed after installation.
 	find * -maxdepth 1 -mindepth 1 -type d -not -name 'control' | xargs \
-		tar -cvjf '../data.tar.bz2' --owner 0 --group 0 --mode g=o
+		tar -cvjf '../data.tar.bz2' --owner 0 --group 0 --mode='a+rX,u+w'
 	find * -type f | xargs \
 		md5sum | sed 's/*//g' > '../control/md5sums'
 )
@@ -35,7 +38,7 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	find -type f -name '*.in' -exec \
 		sh -c "export QDB_VERSION=$QDB_VERSION; export PACKAGE_ARCH=$PACKAGE_ARCH; envsubst '\$QDB_VERSION \$PACKAGE_ARCH' < \$0 > \${0%.in}" {} \;
 	find * -type f -not -name '*.in' | xargs \
-		tar -cvzf '../control.tar.gz' --owner 0 --group 0 --mode g=o
+		tar -cvzf '../control.tar.gz' --owner 0 --group 0 --mode='a+rX,u+w'
 )
 
 echo '2.0' > 'debian-binary'
