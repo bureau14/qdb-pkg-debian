@@ -23,7 +23,7 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	mkdir -p "usr/share/doc/$PACKAGE_NAME"
 	cp "$COPYRIGHT" "usr/share/doc/$PACKAGE_NAME/copyright"
 
-	# Build inputs may have restrictive permissions inherited from their source archives or packaging environment.
+	# Build inputs and generated files may have restrictive permissions
 	# Normalize the Debian package payload to 0644/0755
 	find * -maxdepth 1 -mindepth 1 -type d -not -name 'control' | xargs \
 		tar -cvjf '../data.tar.bz2' --owner 0 --group 0 --mode='u=rwX,go=rX'
