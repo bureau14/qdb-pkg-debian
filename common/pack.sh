@@ -23,8 +23,10 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	mkdir -p "usr/share/doc/$PACKAGE_NAME"
 	cp "$COPYRIGHT" "usr/share/doc/$PACKAGE_NAME/copyright"
 
+	# Build inputs and generated files may have restrictive permissions
+	# Normalize the Debian package payload to 0644/0755
 	find * -maxdepth 1 -mindepth 1 -type d -not -name 'control' | xargs \
-		tar -cvjf '../data.tar.bz2' --owner 0 --group 0 --mode g=o
+		tar -cvjf '../data.tar.bz2' --owner 0 --group 0 --mode='u=rwX,go=rX'
 	find * -type f | xargs \
 		md5sum | sed 's/*//g' > '../control/md5sums'
 )
@@ -35,7 +37,7 @@ rm -f "$DEB_FILENAME" 'control.tar.gz' 'data.tar.bz2'
 	find -type f -name '*.in' -exec \
 		sh -c "export QDB_VERSION=$QDB_VERSION; export PACKAGE_ARCH=$PACKAGE_ARCH; envsubst '\$QDB_VERSION \$PACKAGE_ARCH' < \$0 > \${0%.in}" {} \;
 	find * -type f -not -name '*.in' | xargs \
-		tar -cvzf '../control.tar.gz' --owner 0 --group 0 --mode g=o
+		tar -cvzf '../control.tar.gz' --owner 0 --group 0 --mode='u=rwX,go=rX'
 )
 
 echo '2.0' > 'debian-binary'
