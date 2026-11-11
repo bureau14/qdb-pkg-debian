@@ -1,35 +1,30 @@
 #!/bin/sh
 
-USER="qdb"
-GROUP="$USER"
-ETC_PATH=/etc/qdb
+set -e
 
-# Config
-mkdir -p $ETC_PATH
+OLD_CONF=/etc/qdb/qdb_rest.conf
+OLD_UNIT=/etc/systemd/system/qdb_rest.service
 
-openssl req -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -out $ETC_PATH/qdb_rest.cert.pem -keyout $ETC_PATH/qdb_rest.key.pem -subj "/C=FR/L=Paris/O=Quasardb/CN=Quasardb"
-
-if [ ! -f $ETC_PATH/qdb_rest.conf ]; then
-    cp $ETC_PATH/qdb_rest.conf.sample $ETC_PATH/qdb_rest.conf
+# Earlier versions of this package copied their unit to /etc/systemd/system,
+# where it takes precedence over the unit this package ships. That unit
+# starts the server with --config-file, which qdb_rest no longer accepts.
+if [ -f $OLD_UNIT ] && grep -q -- '--config-file' $OLD_UNIT; then
+    rm -f $OLD_UNIT
 fi
 
-chown -R $USER:$GROUP $ETC_PATH
+# qdb_rest logs to stdout and writes no log file.
+rm -f /etc/logrotate.d/qdb_rest
 
-mkdir -p /var/log/qdb || true
-chown -R qdb:qdb /var/log/qdb
-
-cp -f /usr/share/qdb/systemd/qdb_rest.service /etc/systemd/system/qdb_rest.service
-
-LOGROTATE_PATH="/etc/logrotate.d"
-if [ -d ${LOGROTATE_PATH} ]; then
-    echo "Setting up logrotate template for qdb-rest logs"
-    cp -f /usr/share/qdb/logrotate.d/qdb_rest /etc/logrotate.d/qdb_rest
+if [ -f $OLD_CONF ]; then
+    cat <<NOTICE
+qdb-rest: $OLD_CONF is no longer read.
+qdb-rest: The configuration is now /etc/qdb/qdb_rest.yaml, in a new format,
+qdb-rest: and the service starts with the defaults of that file.
+qdb-rest: Copy your settings into it and run: systemctl restart qdb_rest
+qdb-rest: $OLD_CONF and the certificate files in /etc/qdb are left in place.
+NOTICE
 fi
-
-echo "user: "
-mkdir -p /var/lib/qdb/assets/ || true
-cp -rv usr/assets/* /var/lib/qdb/assets/
 
 systemctl daemon-reload 2>&1 || true
-systemctl -q enable qdb_rest.service
+systemctl -q enable qdb_rest.service 2>&1 || true
 systemctl start qdb_rest.service 2>&1 || true
