@@ -2,7 +2,7 @@ agents:
   queue: "default-debian-amd64"
 
 label: "{name}"
-key: "{slug}"
+step_id: package
 
 commands:
   - bash qdb-api/pack.sh artifacts/*-api.tar.gz
@@ -16,6 +16,7 @@ plugins:
         clean: true
         projects:
           - project_id: "qdb-pkg-archives"
+            step: [api, server, utils, rest]
             files:
               - "*.tar.gz"
             output-dir: artifacts
